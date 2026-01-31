@@ -1,20 +1,20 @@
 'use client'
 
-import { useState } from 'react'
-import { Heading } from '@/components/heading'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { SourceCodeIcon, AiGenerativeIcon } from '@hugeicons/core-free-icons'
 import {
-  ProgressDisplay,
-  ProgressBar,
   ActivityHeatmap,
+  AIFeedbackPanel,
   AIRatingBadge,
   EpicNavigation,
+  ProgressBar,
+  ProgressDisplay,
   StoryList,
-  AIFeedbackPanel,
   type Epic,
   type Story,
 } from '@/components/dashboard'
+import { Heading } from '@/components/heading'
+import { AiGenerativeIcon, SourceCodeIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { useState } from 'react'
 
 // Mock data for the selected curriculum
 const mockEpics: Epic[] = [
@@ -52,15 +52,12 @@ const mockStories: Story[] = [
       },
     ],
     aiFeedback: {
-      summary:
-        '가상 환경과 패키지는 이해하고 있지만, 엔드포인트에 대한 이해는 부족합니다.',
+      summary: '가상 환경과 패키지는 이해하고 있지만, 엔드포인트에 대한 이해는 부족합니다.',
       date: '2026년 5월 9일 02:20',
       taskFeedback: {
         '가상환경 생성': 'venv 생성을 통해 적절한 가상 환경을 구현했습니다.',
-        'FastAPI 설치':
-          'pip를 통해 FastAPI와 uvicorn 패키지를 설치해, 성공적으로 환경을 구성했습니다.',
-        'Hello World API 작성':
-          '엔드포인트에 대한 이해가 부족하여, GET과 POST를 사용하지 못하였습니다.',
+        'FastAPI 설치': 'pip를 통해 FastAPI와 uvicorn 패키지를 설치해, 성공적으로 환경을 구성했습니다.',
+        'Hello World API 작성': '엔드포인트에 대한 이해가 부족하여, GET과 POST를 사용하지 못하였습니다.',
       },
     },
   },
@@ -91,17 +88,20 @@ const mockStories: Story[] = [
   },
 ]
 
-// Mock activity data for heatmap (7 rows × 22 cols = 154 days)
-const generateMockActivityData = () => {
+function seededRandom(seed: number) {
+  const x = Math.sin(seed) * 10000
+  return x - Math.floor(x)
+}
+
+function generateMockActivityData() {
   const data = []
-  const today = new Date()
+  const baseDate = new Date('2026-01-31')
   for (let i = 0; i < 154; i++) {
-    const date = new Date(today)
+    const date = new Date(baseDate)
     date.setDate(date.getDate() - i)
-    // Distribution similar to mockup - mostly empty, some activity
-    const rand = Math.random()
+    const rand = seededRandom(i * 12345)
     let count = 0
-    if (rand > 0.65) count = Math.floor(Math.random() * 8) + 1
+    if (rand > 0.65) count = Math.floor(seededRandom(i * 67890) * 8) + 1
     data.push({
       date: date.toISOString().split('T')[0],
       count,
@@ -125,7 +125,7 @@ export default function DashboardPage() {
       {/* Progress Section */}
       <div className="mt-8 flex flex-wrap items-start justify-between gap-6">
         <ProgressDisplay progress={59} />
-        <button className="flex items-center gap-2 rounded-lg border border-zinc-300 bg-transparent px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800">
+        <button className="flex items-center gap-2 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200">
           <HugeiconsIcon icon={AiGenerativeIcon} size={16} />
           채점 후 피드백
         </button>
@@ -154,20 +154,14 @@ export default function DashboardPage() {
 
       {/* Epic Navigation */}
       <div className="mt-8">
-        <EpicNavigation
-          epics={mockEpics}
-          selectedEpicId={selectedEpicId}
-          onSelectEpic={setSelectedEpicId}
-        />
+        <EpicNavigation epics={mockEpics} selectedEpicId={selectedEpicId} onSelectEpic={setSelectedEpicId} />
       </div>
 
       {/* Story Section */}
       <div className="mt-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <h2 className="text-lg font-semibold text-zinc-950 dark:text-white">Story 구성</h2>
-          <p className="text-sm text-zinc-500">
-            FastAPI 프레임워크를 사용하여 첫 번째 API를 구축합니다
-          </p>
+          <p className="text-sm text-zinc-500">FastAPI 프레임워크를 사용하여 첫 번째 API를 구축합니다</p>
         </div>
 
         <div className="mt-4">

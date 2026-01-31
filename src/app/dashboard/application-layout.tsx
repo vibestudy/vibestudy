@@ -25,6 +25,7 @@ import {
   SidebarSpacer,
 } from '@/components/sidebar'
 import { SidebarLayout } from '@/components/sidebar-layout'
+import { useClerk, useUser } from '@clerk/nextjs'
 import {
   ArrowRightStartOnRectangleIcon,
   ChevronUpIcon,
@@ -34,41 +35,17 @@ import {
   ShieldCheckIcon,
   UserCircleIcon,
 } from '@heroicons/react/16/solid'
-import {
-  QuestionMarkCircleIcon,
-  SparklesIcon,
-} from '@heroicons/react/20/solid'
+import { QuestionMarkCircleIcon, SparklesIcon } from '@heroicons/react/20/solid'
+import { BookOpen01Icon, CodeIcon, GridIcon, SourceCodeIcon, SourceCodeSquareIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import {
-  CodeIcon,
-  SourceCodeIcon,
-  SourceCodeSquareIcon,
-  GridIcon,
-  BookOpen01Icon,
-} from '@hugeicons/core-free-icons'
 import { usePathname } from 'next/navigation'
-import { useUser, useClerk } from '@clerk/nextjs'
 
-// Icon mapping for curriculum types
 const curriculumIcons: Record<string, typeof CodeIcon> = {
   python: SourceCodeIcon,
   react: GridIcon,
   nestjs: SourceCodeSquareIcon,
   default: BookOpen01Icon,
 }
-
-// Mock curriculum data - would come from API in production
-const curricula = [
-  { id: '1', title: 'Python 웹 개발 입문', icon: 'python', progress: 59 },
-  { id: '2', title: 'React Native으로 사이드 프로...', icon: 'react', progress: 27 },
-  { id: '3', title: 'NestJS로 백엔드 정복하기', icon: 'nestjs', progress: 75 },
-  { id: '4', title: 'Python 웹 개발 입문', icon: 'python', progress: 59 },
-  { id: '5', title: 'React Native으로 사이드 프로...', icon: 'react', progress: 27 },
-  { id: '6', title: 'NestJS로 백엔드 정복하기', icon: 'nestjs', progress: 75 },
-  { id: '7', title: 'Python 웹 개발 입문', icon: 'python', progress: 59 },
-  { id: '8', title: 'React Native으로 사이드 프로...', icon: 'react', progress: 27 },
-  { id: '9', title: 'NestJS로 백엔드 정복하기', icon: 'nestjs', progress: 75 },
-]
 
 function getProgressColor(progress: number): 'lime' | 'yellow' | 'cyan' | 'zinc' {
   if (progress >= 70) return 'lime'
@@ -77,13 +54,7 @@ function getProgressColor(progress: number): 'lime' | 'yellow' | 'cyan' | 'zinc'
   return 'zinc'
 }
 
-function AccountDropdownMenu({
-  anchor,
-  onSignOut,
-}: {
-  anchor: 'top start' | 'bottom end'
-  onSignOut: () => void
-}) {
+function AccountDropdownMenu({ anchor, onSignOut }: { anchor: 'top start' | 'bottom end'; onSignOut: () => void }) {
   return (
     <DropdownMenu className="min-w-64" anchor={anchor}>
       <DropdownItem href="#">
@@ -108,12 +79,12 @@ function AccountDropdownMenu({
   )
 }
 
-export function ApplicationLayout({
-  children,
-}: {
-  events?: unknown
+interface ApplicationLayoutProps {
+  curricula: CurriculumListItem[]
   children: React.ReactNode
-}) {
+}
+
+export function ApplicationLayout({ curricula, children }: ApplicationLayoutProps) {
   let pathname = usePathname()
   const { user } = useUser()
   const { signOut } = useClerk()
@@ -163,8 +134,7 @@ export function ApplicationLayout({
             {/* New Journey Button */}
             <div className="mt-3">
               <Button outline className="w-full justify-center">
-                <PlusIcon className="size-4" />
-                새 빌더 여정
+                <PlusIcon className="size-4" />새 빌더 여정
               </Button>
             </div>
           </SidebarHeader>
@@ -180,11 +150,7 @@ export function ApplicationLayout({
                     href={`/dashboard/curriculum/${curriculum.id}`}
                     current={selectedCurriculumId === curriculum.id}
                   >
-                    <HugeiconsIcon
-                      icon={IconComponent}
-                      size={20}
-                      className="shrink-0"
-                    />
+                    <HugeiconsIcon icon={IconComponent} size={20} className="shrink-0" />
                     <SidebarLabel>{curriculum.title}</SidebarLabel>
                     <Badge color={getProgressColor(curriculum.progress)} className="ml-auto">
                       {curriculum.progress}%

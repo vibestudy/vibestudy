@@ -21,13 +21,13 @@ function getActivityLevel(count: number): number {
 }
 
 function getActivityColor(level: number): string {
-  // Matching mockup colors exactly
+  // Dual theme: light mode uses darker shades for more activity, dark mode uses lighter shades
   const colors = [
-    'bg-zinc-700/40', // 0 - no activity (very dark, almost invisible)
-    'bg-zinc-500/60', // 1 - low
-    'bg-zinc-400', // 2 - medium-low
-    'bg-zinc-300', // 3 - medium-high
-    'bg-zinc-200', // 4 - high (lightest)
+    'bg-zinc-200 dark:bg-zinc-700/40', // 0 - no activity
+    'bg-zinc-300 dark:bg-zinc-500/60', // 1 - low
+    'bg-zinc-400 dark:bg-zinc-400', // 2 - medium-low
+    'bg-zinc-500 dark:bg-zinc-300', // 3 - medium-high
+    'bg-zinc-600 dark:bg-zinc-200', // 4 - high
   ]
   return colors[level] || colors[0]
 }
@@ -52,7 +52,7 @@ export function ActivityHeatmap({ data = [], className }: ActivityHeatmapProps) 
   })
 
   // Create grid by columns (each column = 7 days)
-  const columns: typeof cells[] = []
+  const columns: (typeof cells)[] = []
   for (let col = 0; col < cols; col++) {
     const column: typeof cells = []
     for (let row = 0; row < rows; row++) {
@@ -72,10 +72,7 @@ export function ActivityHeatmap({ data = [], className }: ActivityHeatmapProps) 
             {column.map((cell) => (
               <div
                 key={cell.date}
-                className={clsx(
-                  'size-3 rounded-[3px]',
-                  getActivityColor(cell.level)
-                )}
+                className={clsx('size-3 rounded-[3px]', getActivityColor(cell.level))}
                 title={`${cell.date}: ${cell.count}`}
               />
             ))}

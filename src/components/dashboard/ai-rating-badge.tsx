@@ -1,8 +1,8 @@
 'use client'
 
-import clsx from 'clsx'
-import { HugeiconsIcon } from '@hugeicons/react'
 import { AiGenerativeIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import clsx from 'clsx'
 
 type RatingLevel = 'beginner' | 'middle' | 'advanced' | 'expert'
 
@@ -44,7 +44,7 @@ export function AIRatingBadge({ level, range, className }: AIRatingBadgeProps) {
         <HugeiconsIcon icon={AiGenerativeIcon} size={32} className={config.color} />
       </div>
       <div className={clsx('mt-2 text-lg font-semibold', config.color)}>{config.label}</div>
-      {range && <div className="text-sm text-zinc-500">{range}</div>}
+      {range && <div className="text-sm text-zinc-500 dark:text-zinc-500">{range}</div>}
     </div>
   )
 }

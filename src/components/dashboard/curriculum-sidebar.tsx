@@ -1,24 +1,13 @@
 'use client'
 
-import clsx from 'clsx'
 import { Avatar } from '@/components/avatar'
-import { Input, InputGroup } from '@/components/input'
-import { Button } from '@/components/button'
-import {
-  MagnifyingGlassIcon,
-  XMarkIcon,
-  PlusIcon,
-  ArrowRightStartOnRectangleIcon,
-} from '@heroicons/react/16/solid'
 import { Badge } from '@/components/badge'
+import { Button } from '@/components/button'
+import { Input, InputGroup } from '@/components/input'
+import { ArrowRightStartOnRectangleIcon, MagnifyingGlassIcon, PlusIcon, XMarkIcon } from '@heroicons/react/16/solid'
+import { BookOpen01Icon, CodeIcon, GridIcon, SourceCodeIcon, SourceCodeSquareIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import {
-  CodeIcon,
-  SourceCodeIcon,
-  SourceCodeSquareIcon,
-  GridIcon,
-  BookOpen01Icon,
-} from '@hugeicons/core-free-icons'
+import clsx from 'clsx'
 
 export interface Curriculum {
   id: string
@@ -63,11 +52,11 @@ export function CurriculumSidebar({
   onSignOut,
 }: CurriculumSidebarProps) {
   return (
-    <div className="flex h-full flex-col bg-zinc-900">
+    <div className="flex h-full flex-col bg-white dark:bg-zinc-900">
       {/* Logo */}
       <div className="p-4">
         <div className="flex items-center gap-2">
-          <HugeiconsIcon icon={CodeIcon} size={28} className="text-white" />
+          <HugeiconsIcon icon={CodeIcon} size={28} className="text-zinc-950 dark:text-white" />
         </div>
       </div>
 
@@ -75,11 +64,7 @@ export function CurriculumSidebar({
       <div className="px-4 pb-2">
         <InputGroup>
           <MagnifyingGlassIcon data-slot="icon" className="text-zinc-500" />
-          <Input
-            type="search"
-            placeholder="원하는 내용 검색"
-            className="dark:bg-zinc-800"
-          />
+          <Input type="search" placeholder="원하는 내용 검색" className="bg-zinc-100 dark:bg-zinc-800" />
           <XMarkIcon data-slot="icon" className="cursor-pointer text-zinc-500 hover:text-zinc-400" />
         </InputGroup>
       </div>
@@ -87,8 +72,7 @@ export function CurriculumSidebar({
       {/* New Journey Button */}
       <div className="px-4 py-2">
         <Button outline className="w-full justify-center" onClick={onCreateNew}>
-          <PlusIcon className="size-4" />
-          새 빌더 여정
+          <PlusIcon className="size-4" />새 빌더 여정
         </Button>
       </div>
 
@@ -105,8 +89,8 @@ export function CurriculumSidebar({
                 className={clsx(
                   'flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors',
                   selectedCurriculumId === curriculum.id
-                    ? 'bg-zinc-800 text-white'
-                    : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
+                    ? 'bg-zinc-200 text-zinc-950 dark:bg-zinc-800 dark:text-white'
+                    : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-white'
                 )}
               >
                 <div className="flex min-w-0 items-center gap-2">
@@ -124,18 +108,18 @@ export function CurriculumSidebar({
 
       {/* User Profile */}
       {user && (
-        <div className="border-t border-zinc-800 p-4">
+        <div className="border-t border-zinc-200 p-4 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div className="flex min-w-0 items-center gap-3">
               <Avatar src={user.imageUrl} className="size-10" square />
               <div className="min-w-0">
-                <div className="truncate text-sm font-medium text-white">{user.name}</div>
+                <div className="truncate text-sm font-medium text-zinc-950 dark:text-white">{user.name}</div>
                 <div className="truncate text-xs text-zinc-500">{user.email}</div>
               </div>
             </div>
             <button
               onClick={onSignOut}
-              className="rounded p-1 text-zinc-500 hover:bg-zinc-800 hover:text-white"
+              className="rounded p-1 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-white"
             >
               <ArrowRightStartOnRectangleIcon className="size-5" />
             </button>

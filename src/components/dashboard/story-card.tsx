@@ -47,7 +47,7 @@ function TaskStatusIcon({ status }: { status: Task['status'] }) {
       </div>
     )
   }
-  return <div className="size-5 rounded-full border border-zinc-600" />
+  return <div className="size-5 rounded-full border border-zinc-300 dark:border-zinc-600" />
 }
 
 export function StoryCard({ story, isExpanded = false, onToggleExpand, className }: StoryCardProps) {
@@ -55,11 +55,11 @@ export function StoryCard({ story, isExpanded = false, onToggleExpand, className
   const totalTasks = story.tasks.length
 
   return (
-    <div className={clsx('rounded-xl bg-zinc-800/50', className)}>
+    <div className={clsx('rounded-xl bg-zinc-100 dark:bg-zinc-800/50', className)}>
       {/* Story Header */}
       <button type="button" onClick={onToggleExpand} className="flex w-full items-start justify-between p-4 text-left">
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 flex size-6 items-center justify-center rounded-full bg-zinc-700 text-zinc-300">
+          <div className="mt-0.5 flex size-6 items-center justify-center rounded-full bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
             {completedTasks === totalTasks ? (
               <CheckIcon className="size-4" />
             ) : (
@@ -67,20 +67,20 @@ export function StoryCard({ story, isExpanded = false, onToggleExpand, className
             )}
           </div>
           <div>
-            <h4 className="font-medium text-white">{story.title}</h4>
-            <p className="mt-1 text-sm text-zinc-400">{story.description}</p>
+            <h4 className="font-medium text-zinc-950 dark:text-white">{story.title}</h4>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{story.description}</p>
           </div>
         </div>
         {isExpanded ? (
-          <ChevronUpIcon className="size-5 shrink-0 text-zinc-400" />
+          <ChevronUpIcon className="size-5 shrink-0 text-zinc-500 dark:text-zinc-400" />
         ) : (
-          <ChevronDownIcon className="size-5 shrink-0 text-zinc-400" />
+          <ChevronDownIcon className="size-5 shrink-0 text-zinc-500 dark:text-zinc-400" />
         )}
       </button>
 
       {/* Expanded Content: Task List (left) + AI Feedback (right) */}
       {isExpanded && (
-        <div className="flex border-t border-zinc-700/50">
+        <div className="flex border-t border-zinc-200 dark:border-zinc-700/50">
           {/* Left: Task List */}
           <div className="flex-1 p-4">
             <div className="space-y-3">
@@ -88,8 +88,10 @@ export function StoryCard({ story, isExpanded = false, onToggleExpand, className
                 <div key={task.id} className="flex items-start gap-3">
                   <TaskStatusIcon status={task.status} />
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium text-white">{task.title}</div>
-                    {task.description && <div className="mt-0.5 text-xs text-zinc-500">{task.description}</div>}
+                    <div className="text-sm font-medium text-zinc-950 dark:text-white">{task.title}</div>
+                    {task.description && (
+                      <div className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-500">{task.description}</div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -98,7 +100,7 @@ export function StoryCard({ story, isExpanded = false, onToggleExpand, className
 
           {/* Right: AI Feedback Panel */}
           {story.aiFeedback && (
-            <div className="w-[40%] border-l border-zinc-700/50 bg-zinc-800/30 p-4">
+            <div className="w-[40%] border-l border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700/50 dark:bg-zinc-800/30">
               <div className="flex items-center justify-between text-xs text-zinc-500">
                 <span className="flex items-center gap-1">
                   <HugeiconsIcon icon={AiGenerativeIcon} size={14} /> AI 피드백 요약
@@ -106,15 +108,15 @@ export function StoryCard({ story, isExpanded = false, onToggleExpand, className
                 <span>{story.aiFeedback.date}</span>
               </div>
               <div className="mt-2">
-                <div className="text-xs font-medium text-zinc-400">Story 수행 요약</div>
-                <p className="mt-1 text-sm text-zinc-300">{story.aiFeedback.summary}</p>
+                <div className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Story 수행 요약</div>
+                <p className="mt-1 text-sm text-zinc-700 dark:text-zinc-300">{story.aiFeedback.summary}</p>
               </div>
               {story.aiFeedback.taskFeedback && (
                 <div className="mt-3 space-y-2">
                   {Object.entries(story.aiFeedback.taskFeedback).map(([taskTitle, feedback]) => (
                     <div key={taskTitle}>
-                      <div className="text-xs font-medium text-zinc-500">{taskTitle}</div>
-                      <p className="text-xs text-zinc-400">{feedback}</p>
+                      <div className="text-xs font-medium text-zinc-500 dark:text-zinc-500">{taskTitle}</div>
+                      <p className="text-xs text-zinc-600 dark:text-zinc-400">{feedback}</p>
                     </div>
                   ))}
                 </div>
