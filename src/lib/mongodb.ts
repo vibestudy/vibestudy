@@ -32,7 +32,11 @@ export async function connectToDatabase(): Promise<{ client: MongoClient; db: Db
   }
 
   if (!cached.promise) {
-    const options = {}
+    const options = {
+      directConnection: true,
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000,
+    }
 
     cached.promise = MongoClient.connect(MONGODB_URI, options).then((client) => {
       cached.client = client

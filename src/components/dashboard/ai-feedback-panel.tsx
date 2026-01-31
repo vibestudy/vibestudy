@@ -1,8 +1,8 @@
 'use client'
 
-import clsx from 'clsx'
-import { HugeiconsIcon } from '@hugeicons/react'
 import { AiGenerativeIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import clsx from 'clsx'
 
 interface AIFeedbackPanelProps {
   weekLabel?: string
@@ -10,15 +10,11 @@ interface AIFeedbackPanelProps {
   className?: string
 }
 
-export function AIFeedbackPanel({
-  weekLabel = 'AI 이번주 평가',
-  feedback,
-  className,
-}: AIFeedbackPanelProps) {
+export function AIFeedbackPanel({ weekLabel = 'AI 이번주 평가', feedback, className }: AIFeedbackPanelProps) {
   return (
     <div className={clsx('', className)}>
-      <div className="text-sm text-zinc-500 dark:text-zinc-400">{weekLabel}</div>
-      <div className="mt-1 text-lg font-semibold text-zinc-950 dark:text-white">{feedback}</div>
+      <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400">{weekLabel}</div>
+      <div className="mt-1 text-sm font-medium text-zinc-950 dark:text-white">{feedback}</div>
     </div>
   )
 }

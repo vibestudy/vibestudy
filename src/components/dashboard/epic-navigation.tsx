@@ -31,32 +31,32 @@ export function EpicNavigation({ epics, selectedEpicId, onSelectEpic, className 
   }
 
   return (
-    <div className={clsx('flex items-center gap-2', className)}>
+    <div className={clsx('flex items-center gap-1.5', className)}>
       <button
         onClick={handlePrevious}
         disabled={selectedIndex <= 0}
-        className="rounded-lg bg-zinc-200 p-2 text-zinc-600 transition-colors hover:bg-zinc-300 hover:text-zinc-950 disabled:opacity-50 disabled:hover:bg-zinc-200 disabled:hover:text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white dark:disabled:hover:bg-zinc-800 dark:disabled:hover:text-zinc-400"
+        className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-zinc-700 disabled:opacity-40 dark:bg-zinc-800/60 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
       >
-        <ChevronLeftIcon className="size-5" />
+        <ChevronLeftIcon className="size-4" />
       </button>
       <button
         onClick={handleNext}
         disabled={selectedIndex >= epics.length - 1}
-        className="rounded-lg bg-zinc-200 p-2 text-zinc-600 transition-colors hover:bg-zinc-300 hover:text-zinc-950 disabled:opacity-50 disabled:hover:bg-zinc-200 disabled:hover:text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white dark:disabled:hover:bg-zinc-800 dark:disabled:hover:text-zinc-400"
+        className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-zinc-700 disabled:opacity-40 dark:bg-zinc-800/60 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
       >
-        <ChevronRightIcon className="size-5" />
+        <ChevronRightIcon className="size-4" />
       </button>
 
-      <div className="flex flex-1 items-center gap-1 overflow-x-auto">
+      <div className="scrollbar-hide flex flex-1 items-center gap-1 overflow-x-auto">
         {epics.map((epic) => (
           <button
             key={epic.id}
             onClick={() => onSelectEpic?.(epic.id)}
             className={clsx(
-              'rounded-lg px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors',
+              'rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap transition-colors',
               epic.id === selectedEpicId
-                ? 'bg-zinc-300 text-zinc-950 dark:bg-zinc-700 dark:text-white'
-                : 'text-zinc-600 hover:bg-zinc-200 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white'
+                ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950'
+                : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-200'
             )}
           >
             {epic.title}

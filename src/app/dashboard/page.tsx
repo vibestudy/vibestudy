@@ -2,24 +2,23 @@ import {
   ActivityHeatmap,
   AIFeedbackPanel,
   AIRatingBadge,
-  EpicNavigation,
   ProgressBar,
   ProgressDisplay,
-  StoryList,
   type Epic,
   type Story,
   type Task,
 } from '@/components/dashboard'
-import { Heading } from '@/components/heading'
 import { getActivityData, getCurricula, getCurriculumById, getCurriculumTasks } from '@/lib/curricula'
 import type { TaskDocument } from '@/lib/types'
-import { SourceCodeIcon } from '@hugeicons/core-free-icons'
+import { AiGenerativeIcon, Github01Icon, LinkSquare02Icon, SourceCodeIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 import { DashboardClient } from './dashboard-client'
 
 function transformToEpics(
-  structure: { epics: { title: string; description: string; stories: { title: string; description: string }[] }[] } | undefined
+  structure:
+    | { epics: { title: string; description: string; stories: { title: string; description: string }[] }[] }
+    | undefined
 ): Epic[] {
   if (!structure?.epics) return []
   return structure.epics.map((epic, index) => ({
@@ -39,7 +38,9 @@ function transformTaskToUI(task: TaskDocument): Task {
 }
 
 function transformToStoriesWithTasks(
-  structure: { epics: { title: string; description: string; stories: { title: string; description: string }[] }[] } | undefined,
+  structure:
+    | { epics: { title: string; description: string; stories: { title: string; description: string }[] }[] }
+    | undefined,
   epicIndex: number,
   allTasks: TaskDocument[]
 ): Story[] {
@@ -88,33 +89,49 @@ export default async function DashboardPage() {
   return (
     <>
       <div className="flex items-center gap-3">
-        <HugeiconsIcon icon={SourceCodeIcon} size={28} className="text-zinc-950 dark:text-white" />
-        <Heading>{firstCurriculum.title}</Heading>
+        <div className="flex size-8 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+          <HugeiconsIcon icon={SourceCodeIcon} size={20} className="text-zinc-600 dark:text-zinc-300" />
+        </div>
+        <h1 className="text-base font-semibold text-zinc-950 dark:text-white">{firstCurriculum.title}</h1>
       </div>
 
-      <div className="mt-8 flex flex-wrap items-start justify-between gap-6">
-        <ProgressDisplay progress={progress} />
+      <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
+        <div className="flex flex-col gap-3">
+          <div className="text-sm text-zinc-500 dark:text-zinc-400/70">AI 평가 기준 진행도</div>
+          <ProgressDisplay progress={progress} />
+          <Link
+            href="https://github.com/avanturation/python-web"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-fit items-center gap-2 rounded-full bg-zinc-100 px-3 py-2 text-sm text-zinc-950 transition-colors hover:bg-zinc-200 dark:bg-zinc-800/60 dark:text-white dark:hover:bg-zinc-700/60"
+          >
+            <HugeiconsIcon icon={Github01Icon} size={20} />
+            <span>avanturation/python-web</span>
+            <HugeiconsIcon icon={LinkSquare02Icon} size={16} className="text-zinc-400" />
+          </Link>
+        </div>
         <button
           type="button"
-          className="flex items-center gap-2 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+          className="flex items-center gap-2 rounded-full bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100"
         >
+          <HugeiconsIcon icon={AiGenerativeIcon} size={16} />
           채점 후 피드백
         </button>
       </div>
 
-      <div className="mt-8 rounded-2xl border border-zinc-300/50 p-1 dark:border-zinc-700/30">
-        <div className="flex gap-1">
-          <div className="flex flex-col items-center justify-center rounded-xl bg-zinc-100 px-6 py-6 dark:bg-zinc-800/50">
+      <div className="mt-6 rounded-[14px] border border-zinc-200 dark:border-zinc-700/50">
+        <div className="flex flex-col gap-2 p-2 sm:flex-row">
+          <div className="flex shrink-0 items-center justify-center rounded-[10px] bg-zinc-100 px-6 py-5 dark:bg-zinc-800/60">
             <AIRatingBadge level="middle" range="32% ~ 64%" />
           </div>
 
-          <div className="flex-1 rounded-xl bg-zinc-100 px-6 py-6 dark:bg-zinc-800/50">
-            <ProgressBar progress={progress} className="mb-4" />
+          <div className="flex flex-1 flex-col justify-center gap-4 rounded-[10px] bg-zinc-100 px-5 py-4 dark:bg-zinc-800/60">
+            <ProgressBar progress={progress} />
             <ActivityHeatmap data={activityData} />
           </div>
         </div>
 
-        <div className="mt-1 rounded-xl bg-zinc-100 px-6 py-4 dark:bg-zinc-800/50">
+        <div className="rounded-b-[14px] bg-zinc-100 px-5 py-4 dark:bg-zinc-800/60">
           <AIFeedbackPanel
             weekLabel="AI 이번주 평가"
             feedback={firstCurriculum.weekly_summary || '이번 주에 완료된 과제가 없습니다. 새로운 과제에 도전해보세요!'}

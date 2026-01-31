@@ -12,26 +12,26 @@ interface AIRatingBadgeProps {
   className?: string
 }
 
-const levelConfig: Record<RatingLevel, { label: string; color: string; bgColor: string }> = {
+const levelConfig: Record<RatingLevel, { label: string; colorClass: string; iconBg: string }> = {
   beginner: {
     label: '비기너',
-    color: 'text-yellow-400',
-    bgColor: 'bg-yellow-500/10',
+    colorClass: 'text-amber-400',
+    iconBg: 'bg-gradient-to-br from-amber-400/20 to-amber-500/10',
   },
   middle: {
     label: '미들',
-    color: 'text-blue-400',
-    bgColor: 'bg-blue-500/10',
+    colorClass: 'text-blue-400',
+    iconBg: 'bg-gradient-to-br from-blue-400/20 to-blue-500/10',
   },
   advanced: {
     label: '어드밴스드',
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-500/10',
+    colorClass: 'text-purple-400',
+    iconBg: 'bg-gradient-to-br from-purple-400/20 to-purple-500/10',
   },
   expert: {
     label: '엑스퍼트',
-    color: 'text-blue-400',
-    bgColor: 'bg-blue-500/10',
+    colorClass: 'text-emerald-400',
+    iconBg: 'bg-gradient-to-br from-emerald-400/20 to-emerald-500/10',
   },
 }
 
@@ -39,12 +39,14 @@ export function AIRatingBadge({ level, range, className }: AIRatingBadgeProps) {
   const config = levelConfig[level]
 
   return (
-    <div className={clsx('flex flex-col items-center', className)}>
-      <div className={clsx('rounded-lg p-4', config.bgColor)}>
-        <HugeiconsIcon icon={AiGenerativeIcon} size={32} className={config.color} />
+    <div className={clsx('flex flex-col items-center gap-2', className)}>
+      <div className={clsx('rounded-2xl p-4', config.iconBg)}>
+        <HugeiconsIcon icon={AiGenerativeIcon} size={28} className={config.colorClass} />
       </div>
-      <div className={clsx('mt-2 text-lg font-semibold', config.color)}>{config.label}</div>
-      {range && <div className="text-sm text-zinc-500 dark:text-zinc-500">{range}</div>}
+      <div className="flex flex-col items-center">
+        <div className={clsx('text-xl font-bold', config.colorClass)}>{config.label}</div>
+        {range && <div className={clsx('text-xs', config.colorClass)}>{range}</div>}
+      </div>
     </div>
   )
 }
