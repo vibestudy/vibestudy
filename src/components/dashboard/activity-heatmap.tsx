@@ -1,72 +1,66 @@
 'use client'
 
-import { Star, TrendingUp } from 'lucide-react'
+import { Star } from 'lucide-react'
 
-// Generate deterministic mock data to avoid hydration mismatches
-const activityData = [
-  1, 0, 2, 4, 1, 0, 3, 2, 1, 0, 0, 4, 2, 1, 0, 3, 2, 1, 4, 0, 1, 2, 0, 3, 1, 2, 4, 1, 0, 2, 1, 3, 0, 2, 1, 4, 0, 1, 2,
-  3, 0, 1, 2, 4, 2, 1, 4, 0, 3, 2, 1, 0, 4, 2, 1, 3, 0, 2, 1, 4, 0, 3, 2, 1, 0, 2, 1, 0, 2, 3, 1, 4, 0, 2, 1, 3, 0, 2,
-  1, 4, 0, 1, 2, 3, 0, 4, 1, 2, 3, 2, 1, 0, 4, 1, 2, 3, 0, 1, 2, 4, 3, 0, 1, 2, 4, 1, 0, 3, 2, 1,
-].map((intensity, i) => ({ id: `cell-${i}`, intensity }))
-
-const STARS = [1, 2, 3, 4]
-
-const getCellColor = (intensity: number) => {
-  switch (intensity) {
-    case 0:
-      return 'bg-zinc-100 dark:bg-zinc-800'
-    case 1:
-      return 'bg-zinc-300 dark:bg-zinc-700'
-    case 2:
-      return 'bg-zinc-500 dark:bg-zinc-600'
-    case 3:
-      return 'bg-zinc-700 dark:bg-zinc-400'
-    case 4:
-      return 'bg-zinc-900 dark:bg-zinc-200'
-    default:
-      return 'bg-zinc-100 dark:bg-zinc-800'
+// Generate mock heatmap data (22 columns x 5 rows)
+const generateHeatmapData = () => {
+  const data: number[][] = []
+  for (let row = 0; row < 5; row++) {
+    const rowData: number[] = []
+    for (let col = 0; col < 22; col++) {
+      // Random intensity 0-3 (0 = empty, 1 = light, 2 = medium, 3 = dark)
+      rowData.push(Math.floor(Math.random() * 4))
+    }
+    data.push(rowData)
   }
+  return data
 }
 
-export default function ActivityHeatmap() {
-  return (
-    <div className="w-full rounded-3xl bg-white p-6 shadow-sm md:p-8 dark:bg-zinc-900">
-      <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-        <div className="flex flex-col gap-6">
-          <div>
-            <div className="text-6xl font-bold tracking-tight text-zinc-900 dark:text-white">59%</div>
-            <div className="mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">나의 진행 상황</div>
-          </div>
+const heatmapData = generateHeatmapData()
 
-          <div className="flex w-fit items-center gap-4 rounded-2xl bg-zinc-50 px-5 py-3 dark:bg-zinc-800/50">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-              <TrendingUp className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="text-sm font-semibold text-zinc-900 dark:text-white">미들</div>
-              <div className="flex gap-0.5">
-                {STARS.map((star) => (
-                  <Star key={star} className="h-3 w-3 fill-amber-400 text-amber-400" />
-                ))}
-                <Star className="h-3 w-3 text-zinc-300 dark:text-zinc-600" />
-              </div>
-            </div>
+const intensityColors = [
+  'bg-zinc-200 dark:bg-zinc-800', // 0 - empty
+  'bg-zinc-300 dark:bg-zinc-700', // 1 - light
+  'bg-zinc-500 dark:bg-zinc-500', // 2 - medium
+  'bg-zinc-900 dark:bg-white', // 3 - dark/full
+]
+
+export default function ActivityHeatmap() {
+  const overallProgress = 59
+
+  return (
+    <div className="flex gap-4">
+      {/* Rank Card */}
+      <div className="flex w-[140px] flex-col items-center justify-center rounded-2xl bg-zinc-100 p-4 dark:bg-zinc-800">
+        <div className="mb-2 flex size-12 items-center justify-center rounded-full bg-blue-500">
+          <Star className="size-6 text-white" fill="white" />
+        </div>
+        <span className="text-sm font-semibold text-zinc-900 dark:text-white">미들</span>
+        <span className="text-xs text-zinc-500 dark:text-zinc-400">빌더 랭크</span>
+      </div>
+
+      {/* Heatmap Grid */}
+      <div className="flex-1 rounded-2xl bg-zinc-100 p-4 dark:bg-zinc-800">
+        {/* Progress Bar */}
+        <div className="mb-4 flex items-center gap-3">
+          <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+            <div
+              className="h-full rounded-full bg-blue-600 dark:bg-blue-500"
+              style={{ width: `${overallProgress}%` }}
+            />
           </div>
+          <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">{overallProgress}%</span>
         </div>
 
-        <div className="flex flex-1 flex-col justify-end gap-6">
-          <div className="relative h-2 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
-            <div className="absolute top-0 left-0 h-full w-[59%] rounded-full bg-gradient-to-r from-blue-500 to-blue-600" />
-          </div>
-
-          <div
-            className="grid gap-1.5 self-center md:self-end"
-            style={{ gridTemplateColumns: 'repeat(22, minmax(0, 1fr))' }}
-          >
-            {activityData.map(({ id, intensity }) => (
-              <div key={id} className={`h-3 w-3 rounded-sm ${getCellColor(intensity)}`} />
-            ))}
-          </div>
+        {/* Grid */}
+        <div className="flex flex-col gap-1">
+          {heatmapData.map((row, rowIndex) => (
+            <div key={rowIndex} className="flex gap-1">
+              {row.map((intensity, colIndex) => (
+                <div key={`${rowIndex}-${colIndex}`} className={`size-3.5 rounded-sm ${intensityColors[intensity]}`} />
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>
