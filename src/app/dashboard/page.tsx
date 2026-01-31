@@ -2,6 +2,7 @@ import { ActivityHeatmap, AIRatingBadge, ProgressBar, type Epic } from '@/compon
 import { getActivityData, getCurricula } from '@/lib/curricula'
 import Link from 'next/link'
 import { DashboardClient } from './dashboard-client'
+import Image from 'next/image'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
@@ -118,20 +119,6 @@ function SourceCodeIcon() {
   )
 }
 
-function WandIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M13.3333 2.5V5M15.8333 3.75H10.8333M16.6667 7.5V10M18.3333 8.75H15M5 17.5L15 7.5M6.66667 10.8333L9.16667 13.3333"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 interface PageProps {
   searchParams: Promise<{ curriculum?: string }>
 }
@@ -205,7 +192,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
               type="button"
               className="flex items-center justify-center gap-[6px] rounded-full bg-[#F5F5F5] px-[12px] py-[12px] text-[#161616]"
             >
-              <WandIcon />
+              <Image src="/icons/wand-shine.svg" alt="" width={24} height={24} />
               <span className="text-[14px] leading-[1.45] font-medium tracking-[-0.02em]">채점 후 피드백</span>
             </button>
           </div>
