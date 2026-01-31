@@ -1,8 +1,8 @@
 import { ActivityHeatmap, AIRatingBadge, ProgressBar, type Epic } from '@/components/dashboard'
 import { getActivityData, getCurricula } from '@/lib/curricula'
+import Image from 'next/image'
 import Link from 'next/link'
 import { DashboardClient } from './dashboard-client'
-import Image from 'next/image'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
@@ -188,13 +188,13 @@ export default async function DashboardPage({ searchParams }: PageProps) {
               </span>
             </div>
 
-            <button
-              type="button"
+            <Link
+              href="/detail/feedback"
               className="flex items-center justify-center gap-[6px] rounded-full bg-[#F5F5F5] px-[12px] py-[12px] text-[#161616]"
             >
-              <Image src="/icons/wand-shine.svg" alt="" width={24} height={24} />
+              <Image src="/icons/wand-shine.svg" alt="" width={18} height={18} className="dark:invert invert-0" />
               <span className="text-[14px] leading-[1.45] font-medium tracking-[-0.02em]">채점 후 피드백</span>
-            </button>
+            </Link>
           </div>
 
           <div className="flex flex-col gap-[4px] rounded-[14px] border border-[rgba(164,164,164,0.2)] p-[4px]">

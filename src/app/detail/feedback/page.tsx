@@ -2,6 +2,7 @@
 
 import type { Suggestion } from '@/components/feedback'
 import { FeedbackLayout } from '@/components/feedback'
+import { useRouter } from 'next/navigation'
 
 const mockSuggestions: Suggestion[] = [
   {
@@ -55,17 +56,17 @@ const mockSuggestions: Suggestion[] = [
   },
 ]
 
-export default function FeedbackTestPage() {
+export default function FeedbackPage() {
+  const router = useRouter()
+
   return (
-    <div className="flex h-screen items-center justify-center bg-[#F5F5F5] p-4 dark:bg-black">
-      <div className="h-full w-full max-w-6xl">
-        <FeedbackLayout
-          taskTitle="Thread API 만들기"
-          repoUrl="https://github.com/junhoyeo/threads-api"
-          suggestions={mockSuggestions}
-          onClose={() => console.log('close')}
-        />
-      </div>
+    <div className="h-full w-full p-4">
+      <FeedbackLayout
+        taskTitle="Thread API 만들기"
+        repoUrl="https://github.com/junhoyeo/threads-api"
+        suggestions={mockSuggestions}
+        onClose={() => router.push('/dashboard')}
+      />
     </div>
   )
 }
