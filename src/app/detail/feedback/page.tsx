@@ -60,7 +60,7 @@ export default function FeedbackPage() {
   const router = useRouter()
 
   return (
-    <div className="h-full w-full p-4">
+    <div className="h-[calc(100dvh-1rem)] w-full p-2">
       <FeedbackLayout
         taskTitle="Thread API 만들기"
         repoUrl="https://github.com/junhoyeo/threads-api"
