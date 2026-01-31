@@ -171,7 +171,6 @@ COMMIT AND PUSH OFTEN. MUST MATCH mockups folder's design. EDIT THIS PAGE OFTEN.
 - ✅ **Two-column flex layout**: Working perfectly
 - ✅ **Dark mode**: Black backgrounds, proper contrast
 - ✅ **All components rendering**: Sidebar, heatmap, navigation, story card
-- ✅ **Pixel-perfect match**: Verified against `mockups/dashboard.png`
 
 **Verification Method:**
 
