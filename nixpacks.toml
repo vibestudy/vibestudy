@@ -1,0 +1,17 @@
+# Nixpacks configuration for Railway deployment
+# Fixes: lightningcss native module cross-platform issue
+# See: https://station.railway.com/questions/build-failed-error-cannot-find-module-54a1795a
+
+[phases.setup]
+nixPkgs = ["nodejs_18", "bun"]
+
+[phases.install]
+# Use bun install instead of npm ci to allow platform-specific package resolution
+# npm ci strictly follows lockfile which doesn't include Linux binaries when generated on macOS
+cmds = ["bun install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["bun run build"]
+
+[start]
+cmd = "bun run start"

@@ -1,8 +1,8 @@
 'use client'
 
-import { useActionState } from 'react'
 import { ProgressSteps } from '@/components/progress-steps'
 import { ArrowRight, Flag, Loader2 } from 'lucide-react'
+import { useActionState } from 'react'
 import { createSession, type CreateSessionState } from './actions'
 
 const initialState: CreateSessionState = {}
@@ -111,7 +111,7 @@ export default function OnboardingPage() {
           {isPending ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              설계 중...
+              여정 설계 중...
             </>
           ) : (
             <>

@@ -1,21 +1,19 @@
-'use client'
-
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 
 interface ProgressStepsProps {
-  currentStep: 1 | 2 | 3 | 4 | 5
+  currentStep: number
   totalSteps?: number
 }
 
 export function ProgressSteps({ currentStep, totalSteps = 5 }: ProgressStepsProps) {
   return (
     <div className="flex gap-2">
-      {Array.from({ length: totalSteps }, (_, i) => (
+      {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
         <div
-          key={`step-${i}`}
+          key={step}
           className={clsx(
             'h-1 flex-1 rounded-full transition-colors',
-            i < currentStep ? 'bg-zinc-900 dark:bg-white' : 'bg-zinc-200 dark:bg-neutral-700'
+            step <= currentStep ? 'bg-zinc-900 dark:bg-white' : 'bg-zinc-200 dark:bg-zinc-700'
           )}
         />
       ))}
