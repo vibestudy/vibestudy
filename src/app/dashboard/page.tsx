@@ -1,4 +1,5 @@
-import { ActivityHeatmap, AIRatingBadge, ProgressBar, type Epic } from '@/components/dashboard'
+import { ActivityHeatmap, AIRatingBadge, ProgressBar, type Epic, type RatingLevel } from '@/components/dashboard'
+import { MarkdownText } from '@/components/markdown-text'
 import { getActivityData, getCurricula } from '@/lib/curricula'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -88,13 +89,13 @@ function serializeTaskForClient(task: Task) {
   }
 }
 
-function getRatingLevel(progress: number): 'beginner' | 'middle' | 'advanced' {
+function getRatingLevel(progress: number): RatingLevel {
   if (progress >= 66) return 'advanced'
   if (progress >= 33) return 'middle'
   return 'beginner'
 }
 
-function getRatingRange(level: 'beginner' | 'middle' | 'advanced'): string {
+function getRatingRange(level: RatingLevel): string {
   switch (level) {
     case 'beginner':
       return '0% ~ 33%'
@@ -102,6 +103,8 @@ function getRatingRange(level: 'beginner' | 'middle' | 'advanced'): string {
       return '33% ~ 66%'
     case 'advanced':
       return '66% ~ 100%'
+    default:
+      return '0% ~ 100%'
   }
 }
 
@@ -203,7 +206,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             <div className="flex items-center gap-[4px]">
               <AIRatingBadge level={level} range={range} />
               <div className="flex flex-1 flex-col gap-[16px] self-stretch rounded-[10px] bg-[rgba(164,164,164,0.1)] p-[16px] dark:bg-[rgba(245,245,245,0.04)]">
-                <ProgressBar progress={progress} />
+                <ProgressBar progress={progress} level={level} />
                 <ActivityHeatmap data={activityData} />
               </div>
             </div>
@@ -213,7 +216,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
                 AI 이번주 평가
               </span>
               <p className="text-[16px] leading-[1.5] font-medium tracking-[-0.02em] text-[#161616] dark:text-[#F5F5F5]">
-                {weeklySummary}
+                <MarkdownText>{weeklySummary}</MarkdownText>
               </p>
             </div>
           </div>
