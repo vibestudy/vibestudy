@@ -43,8 +43,8 @@ const curriculumIcons: Record<string, string> = {
 }
 
 function getProgressBadgeStyle(progress: number): { bg: string; text: string } {
-  if (progress >= 70) return { bg: 'bg-[#B931EC]', text: 'text-[#F7F4F9]' }
-  if (progress >= 40) return { bg: 'bg-[#028AC7]', text: 'text-[#F0F6FA]' }
+  if (progress >= 66) return { bg: 'bg-[#B931EC]', text: 'text-[#F7F4F9]' }
+  if (progress >= 33) return { bg: 'bg-[#028AC7]', text: 'text-[#F0F6FA]' }
   return { bg: 'bg-[#00AF6D]', text: 'text-[#F1F7F3]' }
 }
 
