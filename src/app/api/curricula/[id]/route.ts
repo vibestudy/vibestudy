@@ -51,6 +51,8 @@ interface CurriculumDocument {
   total_hours: number
   total_tasks: number
   completed_tasks: number
+  icon_id?: string
+  git_repo?: string
   structure: {
     epics: {
       title: string
@@ -72,6 +74,8 @@ interface CurriculumResponse {
   total_hours: number
   total_tasks: number
   completed_tasks: number
+  icon_id?: string
+  git_repo?: string
   structure: {
     epics: {
       title: string
@@ -295,6 +299,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       total_hours: curriculumDoc.total_hours,
       total_tasks: curriculumDoc.total_tasks,
       completed_tasks: curriculumDoc.completed_tasks,
+      icon_id: curriculumDoc.icon_id,
+      git_repo: curriculumDoc.git_repo,
       structure: curriculumDoc.structure,
       created_at:
         curriculumDoc.created_at instanceof Date ? curriculumDoc.created_at.toISOString() : curriculumDoc.created_at,

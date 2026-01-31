@@ -2,7 +2,10 @@
 
 import type { Suggestion } from '@/components/feedback'
 import { FeedbackLayout } from '@/components/feedback'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
+
+const DEFAULT_REPO_URL = 'https://github.com/junhoyeo/threads-api'
 
 const mockSuggestions: Suggestion[] = [
   {
@@ -56,17 +59,67 @@ const mockSuggestions: Suggestion[] = [
   },
 ]
 
-export default function FeedbackPage() {
+interface CurriculumData {
+  course_title: string
+  git_repo?: string
+}
+
+function FeedbackPageContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const curriculumId = searchParams.get('curriculumId')
+
+  const [curriculum, setCurriculum] = useState<CurriculumData | null>(null)
+  const [loading, setLoading] = useState(!!curriculumId)
+
+  useEffect(() => {
+    if (!curriculumId) return
+
+    fetch(`/api/curricula/${curriculumId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCurriculum({
+          course_title: data.course_title,
+          git_repo: data.git_repo,
+        })
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [curriculumId])
+
+  if (loading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="text-zinc-500">로딩 중...</div>
+      </div>
+    )
+  }
+
+  const taskTitle = curriculum?.course_title || 'Thread API 만들기'
+  const repoUrl = curriculum?.git_repo || DEFAULT_REPO_URL
 
   return (
     <div className="h-full w-full p-4">
       <FeedbackLayout
-        taskTitle="Thread API 만들기"
-        repoUrl="https://github.com/junhoyeo/threads-api"
+        taskTitle={taskTitle}
+        repoUrl={repoUrl}
         suggestions={mockSuggestions}
         onClose={() => router.push('/dashboard')}
       />
     </div>
+  )
+}
+
+export default function FeedbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="text-zinc-500">로딩 중...</div>
+        </div>
+      }
+    >
+      <FeedbackPageContent />
+    </Suspense>
   )
 }

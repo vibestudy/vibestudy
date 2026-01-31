@@ -6,12 +6,17 @@ export async function GET() {
     const db = await getDb()
     const collection = db.collection<CurriculumDocument>('curricula')
 
-    const curricula = await collection.find({}).sort({ updated_at: -1 }).toArray()
+    const curricula = await collection
+      .find({ status: { $nin: ['disabled'] } })
+      .sort({ updated_at: -1 })
+      .toArray()
 
     const response: CurriculumListItem[] = curricula.map((doc) => ({
       id: doc._id.toString(),
       title: doc.course_title,
       icon: doc.icon,
+      icon_id: doc.icon_id,
+      git_repo: doc.git_repo,
       progress: doc.total_tasks > 0 ? Math.round((doc.completed_tasks / doc.total_tasks) * 100) : 0,
       status: doc.status,
     }))

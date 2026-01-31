@@ -35,11 +35,13 @@ export interface CurriculumDocument {
   one_liner: string
   student_id: string | null
   clerk_user_id: string | null
-  status: 'generating' | 'active' | 'completed'
+  status: 'generating' | 'active' | 'completed' | 'disabled' | 'approved'
   total_hours: number
   total_tasks: number
   completed_tasks: number
   icon?: string
+  icon_id?: string // Key for curriculumIcons mapping (e.g., 'python', 'thread-api')
+  git_repo?: string // GitHub repository URL
   structure: {
     epics: {
       title: string
@@ -66,6 +68,8 @@ export interface CurriculumListItem {
   id: string
   title: string
   icon?: string
+  icon_id?: string
+  git_repo?: string
   progress: number
   status: string
 }
@@ -75,6 +79,8 @@ export interface CurriculumDetail {
   title: string
   one_liner: string
   icon?: string
+  icon_id?: string
+  git_repo?: string
   progress: number
   status: string
   total_hours: number

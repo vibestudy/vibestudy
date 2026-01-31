@@ -12,6 +12,8 @@ export interface Curriculum {
   id: string
   title: string
   icon?: string
+  icon_id?: string
+  git_repo?: string
   progress: number
 }
 
@@ -80,7 +82,8 @@ export function CurriculumSidebar({
         <h3 className="mb-2 text-xs font-medium text-zinc-500">빌더 여정들</h3>
         <div className="space-y-1">
           {curricula.map((curriculum) => {
-            const iconPath = curriculum.icon ? curriculumIcons[curriculum.icon] : null
+            const iconKey = curriculum.icon_id || curriculum.icon
+            const iconPath = iconKey ? curriculumIcons[iconKey] : null
             return (
               <button
                 key={curriculum.id}
