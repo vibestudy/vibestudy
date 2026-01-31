@@ -23,31 +23,22 @@ import {
   UserCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/16/solid'
-import {
-  AiGenerativeIcon,
-  ApiIcon,
-  BookOpen01Icon,
-  CodeIcon,
-  GridIcon,
-  SmartPhone01Icon,
-  SourceCodeIcon,
-  SourceCodeSquareIcon,
-} from '@hugeicons/core-free-icons'
+import { BookOpen01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 
-const curriculumIcons: Record<string, typeof CodeIcon> = {
-  python: SourceCodeIcon,
-  react: GridIcon,
-  nestjs: SourceCodeSquareIcon,
-  swiftui: SmartPhone01Icon,
-  thread: ApiIcon,
-  claude: AiGenerativeIcon,
-  replit: CodeIcon,
-  default: BookOpen01Icon,
+const curriculumIcons: Record<string, string> = {
+  python: '/icons/python.svg',
+  'react-native': '/icons/react-native.svg',
+  nestjs: '/icons/nestjs.svg',
+  swiftui: '/icons/swiftui.svg',
+  'thread-api': '/icons/thread-api.svg',
+  'claude-agent': '/icons/claude-agent.svg',
+  replit: '/icons/replit.svg',
+  default: '/icons/code.svg',
 }
 
 function getProgressBadgeStyle(progress: number): { bg: string; text: string } {
@@ -178,7 +169,8 @@ export function ApplicationLayout({ curricula, children }: ApplicationLayoutProp
                   <div className="px-3 py-4 text-center text-sm text-zinc-500">검색 결과가 없습니다</div>
                 ) : (
                   filteredCurricula.map((curriculum, index) => {
-                    const IconComponent = curriculumIcons[curriculum.icon || 'default'] || curriculumIcons.default
+                    const isMockup = curriculum.id.startsWith('mock-')
+                    const iconPath = curriculumIcons[curriculum.icon || 'default'] || curriculumIcons.default
                     const isSelected = index === 0 && !searchQuery
                     const badgeStyle = getProgressBadgeStyle(curriculum.progress)
 
@@ -193,7 +185,11 @@ export function ApplicationLayout({ curricula, children }: ApplicationLayoutProp
                             : 'text-zinc-100/70 hover:bg-white/[0.02]'
                         )}
                       >
-                        <HugeiconsIcon icon={IconComponent} size={20} className="shrink-0 opacity-70" />
+                        {isMockup ? (
+                          <Image src={iconPath} alt="" width={20} height={20} className="shrink-0 opacity-70" />
+                        ) : (
+                          <HugeiconsIcon icon={BookOpen01Icon} size={20} className="shrink-0 opacity-70" />
+                        )}
                         <span className="min-w-0 flex-1 truncate">{curriculum.title}</span>
                         <span
                           className={clsx(
