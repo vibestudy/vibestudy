@@ -1,7 +1,8 @@
 'use client'
 
 import clsx from 'clsx'
-import { SparklesIcon } from '@heroicons/react/20/solid'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { AiGenerativeIcon } from '@hugeicons/core-free-icons'
 
 type RatingLevel = 'beginner' | 'middle' | 'advanced' | 'expert'
 
@@ -40,7 +41,7 @@ export function AIRatingBadge({ level, range, className }: AIRatingBadgeProps) {
   return (
     <div className={clsx('flex flex-col items-center', className)}>
       <div className={clsx('rounded-lg p-4', config.bgColor)}>
-        <SparklesIcon className={clsx('size-8', config.color)} />
+        <HugeiconsIcon icon={AiGenerativeIcon} size={32} className={config.color} />
       </div>
       <div className={clsx('mt-2 text-lg font-semibold', config.color)}>{config.label}</div>
       {range && <div className="text-sm text-zinc-500">{range}</div>}

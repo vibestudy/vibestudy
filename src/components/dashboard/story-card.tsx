@@ -2,6 +2,8 @@
 
 import clsx from 'clsx'
 import { CheckIcon, MinusIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { AiGenerativeIcon } from '@hugeicons/core-free-icons'
 import { useState } from 'react'
 
 export interface Task {
@@ -110,7 +112,7 @@ export function StoryCard({
         <div className="border-t border-zinc-700/50 bg-zinc-800/30 p-4">
           <div className="flex items-center justify-between text-xs text-zinc-500">
             <span className="flex items-center gap-1">
-              <span>✨</span> AI 피드백 요약
+              <HugeiconsIcon icon={AiGenerativeIcon} size={14} /> AI 피드백 요약
             </span>
             <span>{story.aiFeedback.date}</span>
           </div>

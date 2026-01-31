@@ -11,6 +11,14 @@ import {
   ArrowRightStartOnRectangleIcon,
 } from '@heroicons/react/16/solid'
 import { Badge } from '@/components/badge'
+import { HugeiconsIcon } from '@hugeicons/react'
+import {
+  CodeIcon,
+  SourceCodeIcon,
+  SourceCodeSquareIcon,
+  GridIcon,
+  BookOpen01Icon,
+} from '@hugeicons/core-free-icons'
 
 export interface Curriculum {
   id: string
@@ -39,19 +47,11 @@ function getProgressColor(progress: number): 'lime' | 'yellow' | 'cyan' | 'zinc'
   return 'zinc'
 }
 
-function CurriculumIcon({ icon, className }: { icon?: string; className?: string }) {
-  const iconMap: Record<string, string> = {
-    python: '🐍',
-    react: '⚛️',
-    nestjs: '🐈',
-    default: '📚',
-  }
-
-  return (
-    <span className={clsx('text-lg', className)}>
-      {iconMap[icon || 'default'] || iconMap.default}
-    </span>
-  )
+const curriculumIcons: Record<string, typeof CodeIcon> = {
+  python: SourceCodeIcon,
+  react: GridIcon,
+  nestjs: SourceCodeSquareIcon,
+  default: BookOpen01Icon,
 }
 
 export function CurriculumSidebar({
@@ -67,7 +67,7 @@ export function CurriculumSidebar({
       {/* Logo */}
       <div className="p-4">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">🍽️</span>
+          <HugeiconsIcon icon={CodeIcon} size={28} className="text-white" />
         </div>
       </div>
 
@@ -96,26 +96,29 @@ export function CurriculumSidebar({
       <div className="flex-1 overflow-y-auto px-4 py-2">
         <h3 className="mb-2 text-xs font-medium text-zinc-500">빌더 여정들</h3>
         <div className="space-y-1">
-          {curricula.map((curriculum) => (
-            <button
-              key={curriculum.id}
-              onClick={() => onSelectCurriculum?.(curriculum.id)}
-              className={clsx(
-                'flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors',
-                selectedCurriculumId === curriculum.id
-                  ? 'bg-zinc-800 text-white'
-                  : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
-              )}
-            >
-              <div className="flex min-w-0 items-center gap-2">
-                <CurriculumIcon icon={curriculum.icon} className="shrink-0" />
-                <span className="truncate">{curriculum.title}</span>
-              </div>
-              <Badge color={getProgressColor(curriculum.progress)} className="ml-2 shrink-0">
-                {curriculum.progress}%
-              </Badge>
-            </button>
-          ))}
+          {curricula.map((curriculum) => {
+            const IconComponent = curriculumIcons[curriculum.icon || 'default'] || curriculumIcons.default
+            return (
+              <button
+                key={curriculum.id}
+                onClick={() => onSelectCurriculum?.(curriculum.id)}
+                className={clsx(
+                  'flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors',
+                  selectedCurriculumId === curriculum.id
+                    ? 'bg-zinc-800 text-white'
+                    : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
+                )}
+              >
+                <div className="flex min-w-0 items-center gap-2">
+                  <HugeiconsIcon icon={IconComponent} size={18} className="shrink-0" />
+                  <span className="truncate">{curriculum.title}</span>
+                </div>
+                <Badge color={getProgressColor(curriculum.progress)} className="ml-2 shrink-0">
+                  {curriculum.progress}%
+                </Badge>
+              </button>
+            )
+          })}
         </div>
       </div>
 
