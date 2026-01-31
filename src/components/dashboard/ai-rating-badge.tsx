@@ -3,7 +3,7 @@
 import clsx from 'clsx'
 import Image from 'next/image'
 
-type RatingLevel = 'beginner' | 'middle' | 'advanced'
+export type RatingLevel = 'beginner' | 'middle' | 'advanced'
 
 interface AIRatingBadgeProps {
   level: RatingLevel
@@ -11,7 +11,7 @@ interface AIRatingBadgeProps {
   className?: string
 }
 
-const levelConfig: Record<RatingLevel, { label: string; color: string; bgColor: string; icon: string }> = {
+export const levelConfig: Record<RatingLevel, { label: string; color: string; bgColor: string; icon: string }> = {
   beginner: {
     label: '비기너',
     color: '#3f8c4a',

@@ -2,6 +2,8 @@
 
 import clsx from 'clsx'
 
+import { levelConfig, type RatingLevel } from './ai-rating-badge'
+
 interface ProgressDisplayProps {
   progress: number
   label?: string
@@ -23,10 +25,13 @@ export function ProgressDisplay({ progress, label = 'AI 평가 기준 진행도'
 
 interface ProgressBarProps {
   progress: number
+  level?: RatingLevel
   className?: string
 }
 
-export function ProgressBar({ progress, className }: ProgressBarProps) {
+export function ProgressBar({ progress, level = 'middle', className }: ProgressBarProps) {
+  const color = levelConfig[level].color
+
   return (
     <div
       className={clsx(
@@ -34,7 +39,13 @@ export function ProgressBar({ progress, className }: ProgressBarProps) {
         className
       )}
     >
-      <div className="h-full rounded-full bg-[#0DABEA]" style={{ width: `${Math.min(100, Math.max(0, progress))}%` }} />
+      <div
+        className="h-full rounded-full"
+        style={{
+          width: `${Math.min(100, Math.max(0, progress))}%`,
+          backgroundColor: color,
+        }}
+      />
     </div>
   )
 }
