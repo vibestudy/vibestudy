@@ -13,7 +13,7 @@ export default function LandingPage() {
             <Logo size={28} />
             <span className="text-lg font-bold text-zinc-950 md:text-xl dark:text-white">오마카쌤</span>
           </div>
-          <Button href="/onboarding" color="dark/zinc">
+          <Button href="/dashboard" color="dark/zinc">
             시작하기
           </Button>
         </div>
@@ -159,7 +159,7 @@ export default function LandingPage() {
             답을 알려주지 않고, 답을 찾아가게 하는 24/7 상주하는 AI Tutor.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
-            <Button href="/onboarding" color="white" className="px-6 py-2.5 md:px-8 md:py-3">
+            <Button href="/dashboard" color="white" className="px-6 py-2.5 md:px-8 md:py-3">
               무료로 시작하기
             </Button>
             <a
