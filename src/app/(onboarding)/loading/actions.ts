@@ -97,7 +97,7 @@ function extractTasksFromPlan(plan: EnrichedCoursePlan, curriculumId: ObjectId):
           title: task.title,
           description: story.description || '',
           acceptance_criteria: transformAcceptanceCriteria(task.acceptance_criteria),
-          estimated_minutes: task.estimated_minutes || null,
+          estimated_minutes: task.estimated_minutes ?? null,
           status: 'pending',
           grade_result: null,
           created_at: now,
