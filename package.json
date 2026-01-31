@@ -35,5 +35,11 @@
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^4.1.15",
     "typescript": "^5.8.3"
+  },
+  "optionalDependencies": {
+    "lightningcss-linux-x64-gnu": "*",
+    "lightningcss-linux-x64-musl": "*",
+    "lightningcss-linux-arm64-gnu": "*",
+    "lightningcss-linux-arm64-musl": "*"
   }
 }
