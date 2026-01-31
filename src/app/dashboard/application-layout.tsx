@@ -25,6 +25,7 @@ import {
   SidebarSpacer,
 } from '@/components/sidebar'
 import { SidebarLayout } from '@/components/sidebar-layout'
+import type { CurriculumListItem } from '@/lib/types'
 import { useClerk, useUser } from '@clerk/nextjs'
 import {
   ArrowRightStartOnRectangleIcon,
@@ -143,7 +144,7 @@ export function ApplicationLayout({ curricula, children }: ApplicationLayoutProp
             <SidebarSection>
               <SidebarHeading>빌더 여정들</SidebarHeading>
               {curricula.map((curriculum) => {
-                const IconComponent = curriculumIcons[curriculum.icon] || curriculumIcons.default
+                const IconComponent = curriculumIcons[curriculum.icon || 'default'] || curriculumIcons.default
                 return (
                   <SidebarItem
                     key={curriculum.id}
