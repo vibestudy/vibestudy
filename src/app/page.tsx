@@ -33,7 +33,7 @@ export default function LandingPage() {
                 />
               </div>
 
-              <div className="flex flex-col justify-center gap-3 rounded-xl bg-white/72 p-6 shadow-[0_0_16px_rgba(22,22,22,0.06)] md:gap-4 md:p-8 lg:h-full lg:w-1/2 lg:p-10 dark:bg-white/8 dark:shadow-[0_0_16px_rgba(0,0,0,0.3)]">
+              <div className="flex flex-col justify-center gap-3 rounded-xl bg-white/[0.72] p-6 shadow-[0_0_16px_rgba(22,22,22,0.06)] md:gap-4 md:p-8 lg:h-full lg:w-1/2 lg:p-10 dark:bg-white/[0.08] dark:shadow-[0_0_16px_rgba(0,0,0,0.3)]">
                 <div className="relative size-12 md:size-14 lg:size-16">
                   <Image src="/landing/icon-flag.svg" alt="" fill className="dark:invert" />
                 </div>
@@ -51,7 +51,7 @@ export default function LandingPage() {
                     <br />
                   </span>
                   <span className="md:hidden"> </span>
-                  오마카셈의 AI 튜터가 나만을 위해 엄선한 코스를 즐겨보세요. 실제로 수행 가능한 테스크를 통해 점진적으로
+                  오마카쌤의 AI 튜터가 나만을 위해 엄선한 코스를 즐겨보세요. 실제로 수행 가능한 테스크를 통해 점진적으로
                   발전할 수 있는 커리큘럼을 제공합니다.
                 </p>
               </div>
@@ -64,7 +64,7 @@ export default function LandingPage() {
                 <Image src="/landing/landing-hero-2.png" alt="탄탄한 커리큘럼" fill className="object-cover" priority />
               </div>
 
-              <div className="flex flex-col justify-center gap-3 rounded-xl bg-white/72 p-6 shadow-[0_0_16px_rgba(22,22,22,0.06)] md:gap-4 md:p-8 lg:h-full lg:w-1/2 lg:p-10 dark:bg-white/8 dark:shadow-[0_0_16px_rgba(0,0,0,0.3)]">
+              <div className="flex flex-col justify-center gap-3 rounded-xl bg-white/[0.72] p-6 shadow-[0_0_16px_rgba(22,22,22,0.06)] md:gap-4 md:p-8 lg:h-full lg:w-1/2 lg:p-10 dark:bg-white/[0.08] dark:shadow-[0_0_16px_rgba(0,0,0,0.3)]">
                 <div className="relative size-12 md:size-14 lg:size-16">
                   <Image src="/landing/icon-donut.svg" alt="" fill className="dark:invert" />
                 </div>
@@ -85,7 +85,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
               <div className="relative flex flex-col gap-1 overflow-hidden rounded-xl p-5 shadow-[0_0_16px_rgba(22,22,22,0.06)] md:p-6 lg:p-7 dark:shadow-[0_0_16px_rgba(0,0,0,0.3)]">
                 <Image src="/landing/landing-epic-bg.png" alt="" fill className="object-cover" aria-hidden="true" />
-                <div className="absolute inset-0 bg-white/72 dark:bg-zinc-900/80" />
+                <div className="absolute inset-0 bg-white/[0.72] dark:bg-zinc-900/80" />
                 <div className="relative z-10 flex items-center gap-2">
                   <div className="relative size-7 md:size-8 lg:size-9">
                     <Image src="/landing/icon-kid-star.svg" alt="" fill className="dark:invert" />
@@ -110,7 +110,7 @@ export default function LandingPage() {
                   className="object-cover"
                   aria-hidden="true"
                 />
-                <div className="absolute inset-0 bg-white/72 dark:bg-zinc-900/80" />
+                <div className="absolute inset-0 bg-white/[0.72] dark:bg-zinc-900/80" />
                 <div className="relative z-10 flex items-center gap-2">
                   <div className="relative size-7 md:size-8 lg:size-9">
                     <Image src="/landing/icon-auto-stories.svg" alt="" fill className="dark:invert" />
@@ -129,7 +129,7 @@ export default function LandingPage() {
 
               <div className="relative flex flex-col gap-1 overflow-hidden rounded-xl p-5 shadow-[0_0_16px_rgba(22,22,22,0.06)] md:p-6 lg:p-7 dark:shadow-[0_0_16px_rgba(0,0,0,0.3)]">
                 <Image src="/landing/landing-task-bg.png" alt="" fill className="object-cover" aria-hidden="true" />
-                <div className="absolute inset-0 bg-white/72 dark:bg-zinc-900/80" />
+                <div className="absolute inset-0 bg-white/[0.72] dark:bg-zinc-900/80" />
                 <div className="relative z-10 flex items-center gap-2">
                   <div className="relative size-7 md:size-8 lg:size-9">
                     <Image src="/landing/icon-assignment.svg" alt="" fill className="dark:invert" />
