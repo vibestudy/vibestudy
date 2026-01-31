@@ -48,7 +48,13 @@ function FeedbackCard({
     >
       <div className="flex flex-1 flex-col gap-2 self-stretch rounded-[10px] bg-[rgba(164,164,164,0.1)] p-3 dark:bg-[rgba(245,245,245,0.04)]">
         <div className="flex flex-row items-center gap-1 self-stretch p-1">
-          <Image src={config.icon} alt="" width={14} height={14} className="opacity-[0.56] invert dark:invert-0" />
+          <Image
+            src={config.icon}
+            alt=""
+            width={14}
+            height={14}
+            className="max-h-[14px] min-h-[14px] max-w-[14px] min-w-[14px] object-contain opacity-[0.56] invert dark:invert-0"
+          />
           <span className="font-pretendard text-xs leading-[1.35] font-normal tracking-[-0.02em] text-[rgba(22,22,22,0.56)] dark:text-[rgba(245,245,245,0.56)]">
             {config.label}
           </span>
