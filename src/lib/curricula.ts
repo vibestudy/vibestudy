@@ -75,11 +75,13 @@ export async function getCurricula(): Promise<CurriculumListItem[]> {
       .toArray()
 
     return curricula
-      .filter((doc) => doc.course_title) // Filter out empty titles
+      .filter((doc) => doc.course_title && doc.status !== 'disabled') // Filter out empty titles and disabled
       .map((doc) => ({
         id: doc._id.toString(),
         title: doc.course_title,
         icon: doc.icon,
+        icon_id: doc.icon_id,
+        git_repo: doc.git_repo,
         progress: doc.total_tasks > 0 ? Math.round((doc.completed_tasks / doc.total_tasks) * 100) : 0,
         status: doc.status,
       }))
