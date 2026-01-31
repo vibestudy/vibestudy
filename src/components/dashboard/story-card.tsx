@@ -34,7 +34,6 @@ interface StoryCardProps {
 function TaskStatusIcon({ status }: { status: Task['status'] }) {
   const baseClasses = "flex size-5 items-center justify-center rounded-full z-10 ring-4 ring-zinc-100 dark:ring-zinc-800/50"
   
-  // Mockup style: white circle + black checkmark (monochrome)
   if (status === 'passed') {
     return (
       <div className={clsx(baseClasses, "bg-white text-zinc-900 dark:bg-white dark:text-black")}>
@@ -42,7 +41,6 @@ function TaskStatusIcon({ status }: { status: Task['status'] }) {
       </div>
     )
   }
-  // Incomplete/partial: dark gray circle + light gray dash
   if (status === 'partial') {
     return (
       <div className={clsx(baseClasses, "bg-zinc-300 text-zinc-500 dark:bg-zinc-600 dark:text-zinc-400")}>
@@ -57,7 +55,6 @@ function TaskStatusIcon({ status }: { status: Task['status'] }) {
       </div>
     )
   }
-  // Pending: empty circle with border
   return <div className={clsx(baseClasses, "bg-white border-2 border-zinc-300 dark:bg-zinc-700 dark:border-zinc-500")} />
 }
 
