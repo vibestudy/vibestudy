@@ -71,7 +71,12 @@ export function StoryCard({ story, className }: StoryCardProps) {
 
         {/* Story Header Item */}
         <div className="relative flex items-start gap-4 mb-6">
-          <div className="relative z-10 mt-0.5 flex size-6 items-center justify-center rounded-full bg-zinc-200 text-zinc-700 ring-4 ring-zinc-100 dark:bg-zinc-700 dark:text-zinc-300 dark:ring-zinc-800">
+          <div className={clsx(
+            "relative z-10 mt-0.5 flex size-6 items-center justify-center rounded-full ring-4 ring-zinc-100 dark:ring-zinc-800/50",
+            completedTasks === totalTasks 
+              ? "bg-white text-black" 
+              : "bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"
+          )}>
             {completedTasks === totalTasks ? (
               <CheckIcon className="size-4" />
             ) : (
