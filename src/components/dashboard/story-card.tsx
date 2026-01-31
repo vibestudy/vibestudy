@@ -63,9 +63,8 @@ export function StoryCard({ story, className }: StoryCardProps) {
   const totalTasks = story.tasks.length
 
   return (
-    <div className={clsx('flex overflow-hidden rounded-xl ring-1 ring-zinc-200 dark:ring-zinc-700/50', className)}>
-      <div className="relative flex-1 py-2">
-        <div className="absolute top-8 bottom-8 left-[11px] w-0.5 bg-zinc-200 dark:bg-zinc-700" />
+    <div className={clsx('flex overflow-hidden rounded-xl ring-1 ring-zinc-200 dark:ring-zinc-700/50 p-4', className)}>
+      <div className="relative flex-1">
 
         {/* Story Header Item */}
         <div className="relative flex items-start gap-4 mb-6">
