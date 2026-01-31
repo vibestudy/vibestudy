@@ -22,7 +22,7 @@
     "lucide-react": "^0.563.0",
     "mongodb": "^7.0.0",
     "motion": "^12.23.11",
-    "next": "^15",
+    "next": "15.5.7",
     "react": "^19",
     "react-dom": "^19",
     "react-markdown": "^10.1.0",
