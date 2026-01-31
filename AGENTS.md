@@ -265,7 +265,7 @@ rm -f playwright-screenshots/*.png
 - [x] Loading Page (flag icon, "빌더 여정 설계 중..." text)
 - [ ] Dashboard Sidebar (search, course list, profile)
 - [ ] Activity Heatmap (GitHub-style 22x5 grid)
-- [ ] Epic Navigation (horizontal tabs with scroll)
+- [x] Epic Navigation (horizontal tabs with scroll)
 - [ ] Story Cards (icon, title, description, task list)
 - [ ] Task Cards (document icon, title, shell command examples)
 
