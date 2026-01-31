@@ -1,18 +1,18 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import { ProgressSteps } from '@/components/progress-steps'
-import { StreamingContent } from '@/components/streaming-content'
 import { DraftPreview } from '@/components/draft-preview'
 import { EnrichmentStreaming } from '@/components/enrichment-streaming'
-import { Flag, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
-import type { CoursePlan, CourseInput } from '@/types/planner'
-import { submitReview, getSessionInfo, saveCurriculumFromPlan } from './actions'
+import { ProgressSteps } from '@/components/progress-steps'
+import { StreamingContent } from '@/components/streaming-content'
+import type { CourseInput, CoursePlan } from '@/types/planner'
+import { AlertCircle, CheckCircle, Flag, Loader2, XCircle } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense, useCallback, useEffect, useState } from 'react'
+import { getSessionInfo, saveCurriculumFromPlan, submitReview } from './actions'
 
 type PageState = 'loading' | 'streaming' | 'ready' | 'submitting' | 'enriching' | 'enrichment_complete' | 'error'
 
-export default function LoadingPage() {
+function LoadingContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const sessionId = searchParams.get('sessionId')
@@ -24,7 +24,6 @@ export default function LoadingPage() {
   const [plannerSessionId, setPlannerSessionId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  // Fetch session input on mount
   useEffect(() => {
     if (!sessionId) return
 
@@ -64,7 +63,6 @@ export default function LoadingPage() {
 
     setPageState('submitting')
 
-    // Get plannerSessionId first
     const sessionInfo = await getSessionInfo(sessionId)
     if (sessionInfo.error || !sessionInfo.plannerSessionId) {
       setError(sessionInfo.error || 'Planner 세션 정보를 가져오는데 실패했습니다')
@@ -129,7 +127,11 @@ export default function LoadingPage() {
 
   return (
     <div className="space-y-8">
-      <ProgressSteps currentStep={pageState === 'enrichment_complete' ? 5 : pageState === 'enriching' ? 4 : pageState === 'ready' ? 3 : 2} />
+      <ProgressSteps
+        currentStep={
+          pageState === 'enrichment_complete' ? 5 : pageState === 'enriching' ? 4 : pageState === 'ready' ? 3 : 2
+        }
+      />
 
       <Flag className="h-8 w-8 text-zinc-900 dark:text-white" strokeWidth={1.5} />
 
@@ -148,12 +150,7 @@ export default function LoadingPage() {
               빌드할 주제를 기반으로 당신에게 맞는 빌드 루트를 설계합니다.
             </p>
           </div>
-          <StreamingContent
-            sessionId={sessionId}
-            input={input}
-            onComplete={handleComplete}
-            onError={handleError}
-          />
+          <StreamingContent sessionId={sessionId} input={input} onComplete={handleComplete} onError={handleError} />
         </>
       )}
 
@@ -215,8 +212,8 @@ export default function LoadingPage() {
           <div className="space-y-2">
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">상세 계획 생성 완료!</h1>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              {enrichedPlan.epics.length}개의 Epic과{' '}
-              {enrichedPlan.epics.reduce((sum, e) => sum + e.stories.length, 0)}개의 Story가 생성되었습니다.
+              {enrichedPlan.epics.length}개의 Epic과 {enrichedPlan.epics.reduce((sum, e) => sum + e.stories.length, 0)}
+              개의 Story가 생성되었습니다.
             </p>
           </div>
 
@@ -224,12 +221,8 @@ export default function LoadingPage() {
             <div className="flex items-center gap-3">
               <CheckCircle className="h-6 w-6 text-green-500" />
               <div>
-                <p className="font-medium text-green-800 dark:text-green-300">
-                  {enrichedPlan.title}
-                </p>
-                <p className="text-sm text-green-600 dark:text-green-400">
-                  {enrichedPlan.oneLiner}
-                </p>
+                <p className="font-medium text-green-800 dark:text-green-300">{enrichedPlan.title}</p>
+                <p className="text-sm text-green-600 dark:text-green-400">{enrichedPlan.oneLiner}</p>
               </div>
             </div>
           </div>
@@ -259,5 +252,25 @@ export default function LoadingPage() {
         </div>
       )}
     </div>
+  )
+}
+
+function LoadingFallback() {
+  return (
+    <div className="space-y-8">
+      <ProgressSteps currentStep={2} />
+      <div className="flex flex-col items-center gap-4 py-8">
+        <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
+        <p className="text-sm text-zinc-500">로딩 중...</p>
+      </div>
+    </div>
+  )
+}
+
+export default function LoadingPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <LoadingContent />
+    </Suspense>
   )
 }
