@@ -4,9 +4,3 @@
   --font-sans: Inter, sans-serif;
   --font-sans--font-feature-settings: 'cv11';
 }
-
-/* 2026 squircle corners - iOS-style smooth curves */
-*[class*='rounded'] {
-  -webkit-corner-shape: squircle;
-  corner-shape: squircle;
-}
