@@ -14,8 +14,8 @@ interface AIRatingBadgeProps {
 const levelConfig: Record<RatingLevel, { label: string; color: string; bgColor: string; icon: string }> = {
   beginner: {
     label: '비기너',
-    color: '#F59E0B',
-    bgColor: 'rgba(245, 158, 11, 0.1)',
+    color: '#3f8c4a',
+    bgColor: 'rgba(29, 96, 38, 0.1)',
     icon: '/icons/levels/level-1',
   },
   middle: {
