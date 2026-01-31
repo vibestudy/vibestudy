@@ -1,6 +1,15 @@
 USE BUN
 
-YOU CAN GET ENVIRONMENT VARIABLES FROM RAILWAY CLI IF THEY ARE NOT SET IN THE .env.local FILE. Railway project: omakasem
+YOU CAN GET ENVIRONMENT VARIABLES FROM RAILWAY CLI IF THEY ARE NOT SET IN THE .env.local FILE. 
+
+USE FOLLOWING COMMAND IF NOT LINKED:
+
+$ cd ~/omakasem-web && railway link -p d703d704-2339-4e10-aa94-0a68e95e4a46 -s fef54e70-5f1b-4397-a97e-37b5fa814c51 -e production 2>&1 || echo "Linking may have issues"
+> Select a workspace omakasem
+> Select a project omakasem
+> Select an environment production
+> Select a service web
+Project omakasem linked successfully! 🎉
 
 # AGENTS.MD - Omakasem Implementation Findings
 
