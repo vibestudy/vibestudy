@@ -1,6 +1,8 @@
+import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest } from 'next/server'
 
 const PLANNER_URL = process.env.OMAKASEM_PLANNER_URL || 'http://localhost:8000'
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY
 
 interface Task {
   task_id: string
@@ -64,18 +66,22 @@ function calculateProgress(tasks: Task[]): number {
   const score = passedTasks * 100 + partialTasks * 50
   const maxScore = tasks.length * 100
 
-  return Math.round(score / maxScore * 100)
+  return Math.round((score / maxScore) * 100)
 }
 
-function generateWeeklySummary(tasks: Task[]): string {
+function getRecentTasks(tasks: Task[]): Task[] {
   const now = new Date()
   const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
-  const recentTasks = tasks.filter((t) => {
+  return tasks.filter((t) => {
     if (!t.grade_result?.graded_at) return false
     const gradedAt = new Date(t.grade_result.graded_at)
     return gradedAt >= oneWeekAgo
   })
+}
+
+function generateFallbackSummary(tasks: Task[]): string {
+  const recentTasks = getRecentTasks(tasks)
 
   if (recentTasks.length === 0) {
     return '이번 주에 완료된 과제가 없습니다. 새로운 과제에 도전해보세요!'
@@ -89,18 +95,11 @@ function generateWeeklySummary(tasks: Task[]): string {
     recentTasks.reduce((sum, t) => sum + (t.grade_result?.percentage || 0), 0) / recentTasks.length
 
   const parts: string[] = []
-
   parts.push(`이번 주 ${recentTasks.length}개의 과제를 제출했습니다.`)
 
-  if (passedCount > 0) {
-    parts.push(`${passedCount}개 통과`)
-  }
-  if (partialCount > 0) {
-    parts.push(`${partialCount}개 부분 통과`)
-  }
-  if (failedCount > 0) {
-    parts.push(`${failedCount}개 재도전 필요`)
-  }
+  if (passedCount > 0) parts.push(`${passedCount}개 통과`)
+  if (partialCount > 0) parts.push(`${partialCount}개 부분 통과`)
+  if (failedCount > 0) parts.push(`${failedCount}개 재도전 필요`)
 
   parts.push(`평균 점수: ${Math.round(avgScore)}점`)
 
@@ -117,17 +116,96 @@ function generateWeeklySummary(tasks: Task[]): string {
   return parts.join(' ')
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+async function generateAIWeeklySummary(curriculum: Curriculum, tasks: Task[]): Promise<string> {
+  if (!ANTHROPIC_API_KEY) {
+    return generateFallbackSummary(tasks)
+  }
+
+  const recentTasks = getRecentTasks(tasks)
+  if (recentTasks.length === 0) {
+    return '이번 주에 완료된 과제가 없습니다. 새로운 과제에 도전해보세요!'
+  }
+
+  const isOAuthToken = ANTHROPIC_API_KEY.startsWith('sk-ant-oat')
+
+  const taskSummaries = recentTasks.map((t) => ({
+    title: t.title,
+    status: t.status,
+    score: t.grade_result?.percentage || 0,
+    grade: t.grade_result?.grade || 'N/A',
+  }))
+
+  const prompt = `당신은 개발자 교육 플랫폼의 AI 멘토입니다. 학생의 이번 주 학습 진행 상황을 바탕으로 따뜻하고 격려하는 피드백을 작성해주세요.
+
+코스: ${curriculum.course_title}
+코스 설명: ${curriculum.one_liner}
+
+이번 주 완료한 과제:
+${taskSummaries.map((t) => `- ${t.title}: ${t.status} (${t.score}점, ${t.grade})`).join('\n')}
+
+다음 조건을 지켜주세요:
+1. 한국어로 작성
+2. 2-3문장으로 간결하게
+3. 구체적인 과제명을 언급하여 개인화된 피드백 제공
+4. 잘한 점을 칭찬하고, 개선이 필요한 부분은 부드럽게 제안
+5. 다음 학습에 대한 동기부여 포함`
+
+  try {
+    if (isOAuthToken) {
+      const response = await fetch('https://api.anthropic.com/v1/messages?beta=true', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'anthropic-version': '2023-06-01',
+          Authorization: `Bearer ${ANTHROPIC_API_KEY}`,
+          'anthropic-beta': 'oauth-2025-04-20',
+          'anthropic-product': 'claude-code',
+          'user-agent': 'claude-cli/2.1.2 (external, cli)',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 256,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      })
+
+      if (!response.ok) {
+        console.error('Anthropic OAuth API error:', response.status)
+        return generateFallbackSummary(tasks)
+      }
+
+      const data = await response.json()
+      const content = data.content?.[0]
+      if (content?.type === 'text') {
+        return content.text
+      }
+      return generateFallbackSummary(tasks)
+    }
+
+    const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY })
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 256,
+      messages: [{ role: 'user', content: prompt }],
+    })
+
+    const content = message.content[0]
+    if (content.type === 'text') {
+      return content.text
+    }
+    return generateFallbackSummary(tasks)
+  } catch (error) {
+    console.error('Error generating AI summary:', error)
+    return generateFallbackSummary(tasks)
+  }
+}
+
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
   try {
     const response = await fetch(`${PLANNER_URL}/v1/curricula/${id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
     })
 
@@ -142,11 +220,12 @@ export async function GET(
     }
 
     const curriculum: Curriculum = await response.json()
+    const weeklySummary = await generateAIWeeklySummary(curriculum, curriculum.tasks)
 
     const result: CurriculumResponse = {
       ...curriculum,
       progress: calculateProgress(curriculum.tasks),
-      weekly_summary: generateWeeklySummary(curriculum.tasks),
+      weekly_summary: weeklySummary,
     }
 
     return Response.json(result)

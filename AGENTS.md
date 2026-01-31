@@ -1,5 +1,7 @@
 USE BUN
 
+YOU CAN GET ENVIRONMENT VARIABLES FROM RAILWAY CLI IF THEY ARE NOT SET IN THE .env.local FILE. Railway project: omakasem
+
 # AGENTS.MD - Omakasem Implementation Findings
 
 **Last Updated**: 2026-02-01 02:30 UTC
