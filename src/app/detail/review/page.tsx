@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { Heading } from '@/components/heading'
 import { Button } from '@/components/button'
-import { Input } from '@/components/input'
 import { FeedbackPanel } from '@/components/feedback'
+import { Heading } from '@/components/heading'
+import { Input } from '@/components/input'
+import { useSearchParams } from 'next/navigation'
+import { Suspense, useState } from 'react'
 
-export default function ReviewTestPage() {
+function ReviewTestContent() {
   const searchParams = useSearchParams()
   const initialRepo = searchParams.get('repo') || 'https://github.com/junhoyeo/threads-api'
 
@@ -40,9 +40,7 @@ export default function ReviewTestPage() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Branch
-              </label>
+              <label className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">Branch</label>
               <Input
                 type="text"
                 value={branch}
@@ -64,5 +62,26 @@ export default function ReviewTestPage() {
         {submitted && <FeedbackPanel repoUrl={repoUrl} branch={branch} />}
       </div>
     </div>
+  )
+}
+
+function ReviewTestFallback() {
+  return (
+    <div className="min-h-screen bg-white dark:bg-zinc-950">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <Heading className="mb-6">코드 리뷰 테스트</Heading>
+        <div className="flex items-center justify-center py-8">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-900 dark:border-zinc-600 dark:border-t-white" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function ReviewTestPage() {
+  return (
+    <Suspense fallback={<ReviewTestFallback />}>
+      <ReviewTestContent />
+    </Suspense>
   )
 }
