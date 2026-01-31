@@ -10,7 +10,9 @@ export interface Task {
   id: string
   title: string
   description?: string
-  status: 'completed' | 'in_progress' | 'pending'
+  status: 'pending' | 'partial' | 'passed' | 'failed'
+  grade?: string
+  score?: number
 }
 
 export interface Story {
@@ -33,16 +35,23 @@ interface StoryCardProps {
 }
 
 function TaskStatusIcon({ status }: { status: Task['status'] }) {
-  if (status === 'completed') {
+  if (status === 'passed') {
     return (
-      <div className="flex size-5 items-center justify-center rounded-full bg-blue-500/20 text-blue-400">
+      <div className="flex size-5 items-center justify-center rounded-full bg-green-500/20 text-green-500">
         <CheckIcon className="size-3" />
       </div>
     )
   }
-  if (status === 'in_progress') {
+  if (status === 'partial') {
     return (
-      <div className="flex size-5 items-center justify-center rounded-full bg-blue-500/20 text-blue-400">
+      <div className="flex size-5 items-center justify-center rounded-full bg-yellow-500/20 text-yellow-500">
+        <MinusIcon className="size-3" />
+      </div>
+    )
+  }
+  if (status === 'failed') {
+    return (
+      <div className="flex size-5 items-center justify-center rounded-full bg-red-500/20 text-red-500">
         <MinusIcon className="size-3" />
       </div>
     )
@@ -51,7 +60,7 @@ function TaskStatusIcon({ status }: { status: Task['status'] }) {
 }
 
 export function StoryCard({ story, isExpanded = false, onToggleExpand, className }: StoryCardProps) {
-  const completedTasks = story.tasks.filter((t) => t.status === 'completed').length
+  const completedTasks = story.tasks.filter((t) => t.status === 'passed').length
   const totalTasks = story.tasks.length
 
   return (

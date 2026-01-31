@@ -30,24 +30,13 @@ interface DashboardClientProps {
   allTasks: TaskData[]
 }
 
-function mapTaskStatus(dbStatus: TaskData['status']): Task['status'] {
-  switch (dbStatus) {
-    case 'passed':
-      return 'completed'
-    case 'partial':
-      return 'in_progress'
-    case 'failed':
-    case 'pending':
-    default:
-      return 'pending'
-  }
-}
-
 function transformTaskToUI(task: TaskData): Task {
   return {
     id: typeof task._id === 'string' ? task._id : task._id.toString(),
     title: task.title,
-    status: mapTaskStatus(task.status),
+    status: task.status,
+    grade: task.grade_result?.grade,
+    score: task.grade_result?.percentage,
   }
 }
 
