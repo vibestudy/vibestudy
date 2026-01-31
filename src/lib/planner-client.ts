@@ -1,4 +1,4 @@
-import type { CourseInput, SessionResponse, CoursePlan } from '@/types/planner';
+import type { CourseInput, SessionResponse, CoursePlan, PlanResponse } from '@/types/planner';
 
 const PLANNER_API_URL = process.env.PLANNER_API_URL || 'https://planner.omakasem.com';
 
@@ -119,6 +119,55 @@ export class PlannerClient {
 
     if (!response.ok) {
       throw new Error(`Failed to save curriculum: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  /**
+   * Get plan from Planner API
+   */
+  async getPlan(planId: string): Promise<PlanResponse> {
+    const response = await fetch(`${this.baseUrl}/v1/plans/${planId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to get plan: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  /**
+   * Save enriched plan to Planner API
+   */
+  async savePlan(
+    plannerSessionId: string,
+    plan: CoursePlan,
+    githubUrl?: string
+  ): Promise<{ planId: string }> {
+    const response = await fetch(`${this.baseUrl}/v1/plans`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: plannerSessionId,
+        course_title: plan.title,
+        one_liner: plan.oneLiner,
+        github_url: githubUrl || '',
+        epics: plan.epics,
+        sources: [],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to save plan: ${response.status} - ${errorText}`);
     }
 
     return response.json();

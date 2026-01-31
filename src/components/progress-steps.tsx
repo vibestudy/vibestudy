@@ -3,11 +3,11 @@
 import clsx from 'clsx'
 
 interface ProgressStepsProps {
-  currentStep: 1 | 2 | 3
+  currentStep: 1 | 2 | 3 | 4 | 5
   totalSteps?: number
 }
 
-export function ProgressSteps({ currentStep, totalSteps = 3 }: ProgressStepsProps) {
+export function ProgressSteps({ currentStep, totalSteps = 5 }: ProgressStepsProps) {
   return (
     <div className="flex gap-2">
       {Array.from({ length: totalSteps }, (_, i) => (

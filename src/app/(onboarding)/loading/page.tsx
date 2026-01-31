@@ -20,6 +20,7 @@ export default function LoadingPage() {
   const [pageState, setPageState] = useState<PageState>('loading')
   const [input, setInput] = useState<CourseInput | null>(null)
   const [draft, setDraft] = useState<CoursePlan | null>(null)
+  const [enrichedPlan, setEnrichedPlan] = useState<CoursePlan | null>(null)
   const [plannerSessionId, setPlannerSessionId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -75,18 +76,31 @@ export default function LoadingPage() {
     setPageState('enriching')
   }
 
-  const handleEnrichmentComplete = useCallback(async (plan: unknown) => {
-    if (!sessionId) return
+  const handleEnrichmentComplete = useCallback((plan: unknown) => {
+    console.log('[handleEnrichmentComplete] received plan:', plan)
+    setEnrichedPlan(plan as CoursePlan)
+    setPageState('enrichment_complete')
+  }, [])
 
-    const result = await saveCurriculumFromPlan(sessionId, plan as CoursePlan)
+  const handleConfirmAndSave = async () => {
+    console.log('[handleConfirmAndSave] called', { sessionId, enrichedPlan })
+    if (!sessionId || !enrichedPlan) {
+      console.error('[handleConfirmAndSave] missing sessionId or enrichedPlan')
+      return
+    }
+
+    setPageState('submitting')
+    console.log('[handleConfirmAndSave] calling saveCurriculumFromPlan...')
+    const result = await saveCurriculumFromPlan(sessionId, enrichedPlan)
+    console.log('[handleConfirmAndSave] result:', result)
+
     if (result.error) {
       setError(result.error)
       setPageState('error')
-    } else if (result.curriculumId) {
-      // 임시: 확인 페이지로 이동 (나중에 대시보드로 변경)
-      router.push(`/complete?curriculumId=${result.curriculumId}`)
+    } else if (result.planId) {
+      router.push(`/complete?planId=${result.planId}`)
     }
-  }, [sessionId, router])
+  }
 
   const handleReject = async () => {
     if (!sessionId) return
@@ -115,7 +129,7 @@ export default function LoadingPage() {
 
   return (
     <div className="space-y-8">
-      <ProgressSteps currentStep={pageState === 'enriching' ? 4 : pageState === 'ready' ? 3 : 2} />
+      <ProgressSteps currentStep={pageState === 'enrichment_complete' ? 5 : pageState === 'enriching' ? 4 : pageState === 'ready' ? 3 : 2} />
 
       <Flag className="h-8 w-8 text-zinc-900 dark:text-white" strokeWidth={1.5} />
 
@@ -193,6 +207,40 @@ export default function LoadingPage() {
             onComplete={handleEnrichmentComplete}
             onError={handleError}
           />
+        </>
+      )}
+
+      {pageState === 'enrichment_complete' && enrichedPlan && (
+        <>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">상세 계획 생성 완료!</h1>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              {enrichedPlan.epics.length}개의 Epic과{' '}
+              {enrichedPlan.epics.reduce((sum, e) => sum + e.stories.length, 0)}개의 Story가 생성되었습니다.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="h-6 w-6 text-green-500" />
+              <div>
+                <p className="font-medium text-green-800 dark:text-green-300">
+                  {enrichedPlan.title}
+                </p>
+                <p className="text-sm text-green-600 dark:text-green-400">
+                  {enrichedPlan.oneLiner}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={handleConfirmAndSave}
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-zinc-900 font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+          >
+            <CheckCircle className="h-4 w-4" />
+            확인
+          </button>
         </>
       )}
 

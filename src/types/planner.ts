@@ -5,6 +5,7 @@ export interface CourseInput {
   description: string;
   totalWeeks: number;
   weeklyHours: number;
+  githubUrl?: string;
 }
 
 export interface Story {
@@ -64,5 +65,45 @@ export interface CurriculumDocument {
   epics: Epic[];
   taskCount: number;
   status: 'active' | 'completed';
+  githubUrl?: string;
   createdAt: Date;
+}
+
+// Planner API Plan Response (GET /v1/plans/{id})
+export interface PlanTask {
+  title: string;
+  acceptance_criteria: string[];
+  estimated_minutes: number;
+}
+
+export interface PlanStory {
+  title: string;
+  description: string;
+  prereqs: string[];
+  definition_of_done: string[];
+  tasks: PlanTask[];
+}
+
+export interface PlanEpic {
+  title: string;
+  description: string;
+  order: number;
+  prerequisites: string[];
+  stories: PlanStory[];
+}
+
+export interface PlanSource {
+  title: string;
+  url: string;
+  publisher: string;
+  retrieved_at: string;
+}
+
+export interface PlanResponse {
+  id: string;
+  course_title: string;
+  one_liner: string;
+  github_url: string;
+  epics: PlanEpic[];
+  sources: PlanSource[];
 }
