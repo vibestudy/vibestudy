@@ -47,16 +47,6 @@ function getProgressBadgeStyle(progress: number): { bg: string; text: string } {
   return { bg: 'bg-[#00AF6D]', text: 'text-[#F1F7F3]' }
 }
 
-const mockupCurricula: CurriculumListItem[] = [
-  { id: 'mock-1', title: 'Python 웹 개발 입문', progress: 59, icon: 'python', status: 'active' },
-  { id: 'mock-2', title: 'React Native으로 사이드 프로젝트', progress: 27, icon: 'react-native', status: 'active' },
-  { id: 'mock-3', title: 'NestJS로 백엔드 정복하기', progress: 75, icon: 'nestjs', status: 'active' },
-  { id: 'mock-4', title: 'Thread API 만들기', progress: 42, icon: 'thread-api', status: 'active' },
-  { id: 'mock-5', title: 'SwiftUI 기초 배우기', progress: 95, icon: 'swiftui', status: 'active' },
-  { id: 'mock-6', title: 'Claude Agent SDK 배우기', progress: 17, icon: 'claude-agent', status: 'active' },
-  { id: 'mock-7', title: 'Replit을 활용한 간단 앱 만들기', progress: 9, icon: 'replit', status: 'active' },
-]
-
 function AccountDropdownMenu({ anchor, onSignOut }: { anchor: 'top start' | 'bottom end'; onSignOut: () => void }) {
   return (
     <DropdownMenu className="min-w-64" anchor={anchor}>
@@ -100,7 +90,7 @@ export function ApplicationLayout({ curricula, children }: ApplicationLayoutProp
   const userEmail = user?.primaryEmailAddress?.emailAddress || ''
   const userImageUrl = user?.imageUrl
 
-  const allCurricula = useMemo(() => [...curricula, ...mockupCurricula], [curricula])
+  const allCurricula = curricula
 
   const filteredCurricula = useMemo(() => {
     if (!searchQuery.trim()) return allCurricula
@@ -169,8 +159,8 @@ export function ApplicationLayout({ curricula, children }: ApplicationLayoutProp
                   <div className="px-3 py-4 text-center text-sm text-zinc-500">검색 결과가 없습니다</div>
                 ) : (
                   filteredCurricula.map((curriculum, index) => {
-                    const isMockup = curriculum.id.startsWith('mock-')
-                    const iconPath = curriculumIcons[curriculum.icon || 'default'] || curriculumIcons.default
+                    const iconKey = curriculum.icon_id || curriculum.icon
+                    const iconPath = iconKey ? curriculumIcons[iconKey] : null
                     const isSelected = index === 0 && !searchQuery
                     const badgeStyle = getProgressBadgeStyle(curriculum.progress)
 
@@ -185,7 +175,7 @@ export function ApplicationLayout({ curricula, children }: ApplicationLayoutProp
                             : 'text-zinc-100/70 hover:bg-white/[0.02]'
                         )}
                       >
-                        {isMockup ? (
+                        {iconPath ? (
                           <Image src={iconPath} alt="" width={20} height={20} className="shrink-0 opacity-70" />
                         ) : (
                           <HugeiconsIcon icon={BookOpen01Icon} size={20} className="shrink-0 opacity-70" />
