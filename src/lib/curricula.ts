@@ -1,5 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { ObjectId } from 'mongodb'
+import { unstable_cache } from 'next/cache'
+import { cache } from 'react'
 import { getDb } from './mongodb'
 import type {
   ActivityData,
@@ -10,47 +12,39 @@ import type {
   TaskDocument,
 } from './types'
 
-/**
- * Helper to build a flexible ID query that works with both ObjectId and string IDs
- */
+export const CACHE_TAGS = {
+  curricula: 'curricula',
+  curriculum: (id: string) => `curriculum-${id}`,
+  activities: 'activities',
+} as const
+
+const REVALIDATE_TIME = 60
+
 function buildIdQuery(id: string): { _id: ObjectId } | { _id: string } {
   try {
-    // If it's a valid ObjectId format, query as ObjectId
     if (ObjectId.isValid(id) && new ObjectId(id).toString() === id) {
       return { _id: new ObjectId(id) }
     }
   } catch {
     // Not a valid ObjectId
   }
-  // Otherwise query as string
   return { _id: id as unknown as ObjectId }
 }
 
-export async function getCurricula(): Promise<CurriculumListItem[]> {
-  const { userId } = await auth()
-
-  if (!userId) {
-    return []
-  }
-
+async function getCurriculaInternal(userId: string): Promise<CurriculumListItem[]> {
   try {
     const db = await getDb()
     const collection = db.collection<CurriculumDocument>('curricula')
 
-    // Query: user's curricula OR curricula without user assignment (legacy data)
     const curricula = await collection
       .find({
-        $or: [
-          { clerk_user_id: userId },
-          { clerk_user_id: { $exists: false } },
-          { clerk_user_id: null },
-        ],
+        $or: [{ clerk_user_id: userId }, { clerk_user_id: { $exists: false } }, { clerk_user_id: null }],
       })
       .sort({ updated_at: -1 })
       .toArray()
 
     return curricula
-      .filter((doc) => doc.course_title) // Filter out empty titles
+      .filter((doc) => doc.course_title)
       .map((doc) => ({
         id: doc._id.toString(),
         title: doc.course_title,
@@ -64,31 +58,30 @@ export async function getCurricula(): Promise<CurriculumListItem[]> {
   }
 }
 
-export async function getCurriculumById(id: string): Promise<CurriculumDetail | null> {
+const getCurriculaCached = (userId: string) =>
+  unstable_cache(() => getCurriculaInternal(userId), [`curricula-${userId}`], {
+    revalidate: REVALIDATE_TIME,
+    tags: [CACHE_TAGS.curricula],
+  })()
+
+export const getCurricula = cache(async (): Promise<CurriculumListItem[]> => {
   const { userId } = await auth()
+  if (!userId) return []
+  return getCurriculaCached(userId)
+})
 
-  if (!userId) {
-    return null
-  }
-
+async function getCurriculumByIdInternal(id: string, userId: string): Promise<CurriculumDetail | null> {
   try {
     const db = await getDb()
     const collection = db.collection<CurriculumDocument>('curricula')
 
-    // Try to find by either ObjectId or string ID
     const idQuery = buildIdQuery(id)
     const doc = await collection.findOne({
       ...idQuery,
-      $or: [
-        { clerk_user_id: userId },
-        { clerk_user_id: { $exists: false } },
-        { clerk_user_id: null },
-      ],
+      $or: [{ clerk_user_id: userId }, { clerk_user_id: { $exists: false } }, { clerk_user_id: null }],
     })
 
-    if (!doc) {
-      return null
-    }
+    if (!doc) return null
 
     return {
       id: doc._id.toString(),
@@ -108,21 +101,25 @@ export async function getCurriculumById(id: string): Promise<CurriculumDetail | 
   }
 }
 
-export async function getCurriculumTasks(curriculumId: string): Promise<TaskDocument[]> {
+const getCurriculumByIdCached = (id: string, userId: string) =>
+  unstable_cache(() => getCurriculumByIdInternal(id, userId), [`curriculum-${id}-${userId}`], {
+    revalidate: REVALIDATE_TIME,
+    tags: [CACHE_TAGS.curriculum(id)],
+  })()
+
+export const getCurriculumById = cache(async (id: string): Promise<CurriculumDetail | null> => {
   const { userId } = await auth()
+  if (!userId) return null
+  return getCurriculumByIdCached(id, userId)
+})
 
-  if (!userId) {
-    return []
-  }
-
+async function getCurriculumTasksInternal(curriculumId: string): Promise<TaskDocument[]> {
   try {
     const db = await getDb()
     const collection = db.collection<TaskDocument>('tasks')
 
-    // Query with both ObjectId and string curriculum_id
     let tasks: TaskDocument[] = []
 
-    // Try ObjectId first
     try {
       if (ObjectId.isValid(curriculumId)) {
         tasks = await collection
@@ -131,10 +128,9 @@ export async function getCurriculumTasks(curriculumId: string): Promise<TaskDocu
           .toArray()
       }
     } catch {
-      // Not a valid ObjectId, ignore
+      // Not a valid ObjectId
     }
 
-    // If no results, try string
     if (tasks.length === 0) {
       tasks = await collection
         .find({ curriculum_id: curriculumId as unknown as ObjectId })
@@ -149,13 +145,33 @@ export async function getCurriculumTasks(curriculumId: string): Promise<TaskDocu
   }
 }
 
-export async function getActivityData(days: number = 154): Promise<ActivityData[]> {
+const getCurriculumTasksCached = (curriculumId: string, userId: string) =>
+  unstable_cache(() => getCurriculumTasksInternal(curriculumId), [`tasks-${curriculumId}-${userId}`], {
+    revalidate: REVALIDATE_TIME,
+    tags: [CACHE_TAGS.curriculum(curriculumId)],
+  })()
+
+export const getCurriculumTasks = cache(async (curriculumId: string): Promise<TaskDocument[]> => {
   const { userId } = await auth()
+  if (!userId) return []
+  return getCurriculumTasksCached(curriculumId, userId)
+})
 
-  if (!userId) {
-    return generateEmptyActivityData(days)
+function generateEmptyActivityData(days: number): ActivityData[] {
+  const response: ActivityData[] = []
+  const today = new Date()
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(today)
+    date.setDate(date.getDate() - i)
+    response.push({
+      date: date.toISOString().split('T')[0],
+      count: 0,
+    })
   }
+  return response
+}
 
+async function getActivityDataInternal(days: number, userId: string): Promise<ActivityData[]> {
   try {
     const db = await getDb()
     const collection = db.collection<ActivityDocument>('activities')
@@ -166,10 +182,7 @@ export async function getActivityData(days: number = 154): Promise<ActivityData[
 
     const activities = await collection
       .find({
-        $or: [
-          { clerk_user_id: userId },
-          { clerk_user_id: { $exists: false } },
-        ],
+        $or: [{ clerk_user_id: userId }, { clerk_user_id: { $exists: false } }],
         date: { $gte: startDateStr },
       })
       .sort({ date: 1 })
@@ -200,16 +213,14 @@ export async function getActivityData(days: number = 154): Promise<ActivityData[
   }
 }
 
-function generateEmptyActivityData(days: number): ActivityData[] {
-  const response: ActivityData[] = []
-  const today = new Date()
-  for (let i = days - 1; i >= 0; i--) {
-    const date = new Date(today)
-    date.setDate(date.getDate() - i)
-    response.push({
-      date: date.toISOString().split('T')[0],
-      count: 0,
-    })
-  }
-  return response
-}
+const getActivityDataCached = (days: number, userId: string) =>
+  unstable_cache(() => getActivityDataInternal(days, userId), [`activities-${days}-${userId}`], {
+    revalidate: REVALIDATE_TIME,
+    tags: [CACHE_TAGS.activities],
+  })()
+
+export const getActivityData = cache(async (days: number = 154): Promise<ActivityData[]> => {
+  const { userId } = await auth()
+  if (!userId) return generateEmptyActivityData(days)
+  return getActivityDataCached(days, userId)
+})

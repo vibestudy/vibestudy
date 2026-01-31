@@ -48,7 +48,7 @@ async function fetchCurriculumFromAPI(id: string): Promise<CurriculumResponse | 
   try {
     const response = await fetch(`${BASE_URL}/api/curricula/${id}`, {
       headers: { 'Content-Type': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 60, tags: [`curriculum-${id}`] },
     })
 
     if (!response.ok) {

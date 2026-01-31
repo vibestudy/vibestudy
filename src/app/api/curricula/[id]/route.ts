@@ -3,6 +3,8 @@ import Anthropic from '@anthropic-ai/sdk'
 import { ObjectId } from 'mongodb'
 import { NextRequest } from 'next/server'
 
+export const revalidate = 60
+
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
