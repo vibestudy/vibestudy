@@ -32,30 +32,33 @@ interface StoryCardProps {
 }
 
 function TaskStatusIcon({ status }: { status: Task['status'] }) {
-  const baseClasses = "flex size-5 items-center justify-center rounded-full z-10 ring-4 ring-zinc-100 dark:ring-zinc-800"
+  const baseClasses = "flex size-5 items-center justify-center rounded-full z-10 ring-4 ring-zinc-100 dark:ring-zinc-800/50"
   
+  // Mockup style: white circle + black checkmark (monochrome)
   if (status === 'passed') {
     return (
-      <div className={clsx(baseClasses, "bg-green-500/20 text-green-500")}>
+      <div className={clsx(baseClasses, "bg-white text-zinc-900 dark:bg-white dark:text-black")}>
         <CheckIcon className="size-3" />
       </div>
     )
   }
+  // Incomplete/partial: dark gray circle + light gray dash
   if (status === 'partial') {
     return (
-      <div className={clsx(baseClasses, "bg-yellow-500/20 text-yellow-500")}>
+      <div className={clsx(baseClasses, "bg-zinc-300 text-zinc-500 dark:bg-zinc-600 dark:text-zinc-400")}>
         <MinusIcon className="size-3" />
       </div>
     )
   }
   if (status === 'failed') {
     return (
-      <div className={clsx(baseClasses, "bg-red-500/20 text-red-500")}>
+      <div className={clsx(baseClasses, "bg-zinc-300 text-zinc-500 dark:bg-zinc-600 dark:text-zinc-400")}>
         <MinusIcon className="size-3" />
       </div>
     )
   }
-  return <div className={clsx(baseClasses, "bg-white border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800")} />
+  // Pending: empty circle with border
+  return <div className={clsx(baseClasses, "bg-white border-2 border-zinc-300 dark:bg-zinc-700 dark:border-zinc-500")} />
 }
 
 export function StoryCard({ story, className }: StoryCardProps) {
