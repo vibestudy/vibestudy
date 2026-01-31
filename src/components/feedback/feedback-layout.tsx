@@ -148,11 +148,11 @@ export function FeedbackLayout({ taskTitle, repoUrl, branch = 'main', suggestion
       <div className="relative flex w-full shrink-0 flex-col overflow-hidden rounded-2xl bg-[rgba(255,255,255,0.72)] shadow-[0px_0px_24px_0px_rgba(22,22,22,0.06)] lg:w-[400px] dark:bg-[rgba(255,255,255,0.04)]">
         <div className="flex flex-1 flex-col overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="sticky top-0 z-10 flex flex-row items-center gap-2.5 self-stretch bg-[rgba(255,255,255,0.72)] p-5 backdrop-blur-sm dark:bg-[rgba(30,30,30,0.95)]">
-            <div className="flex flex-row items-center gap-2">
-              <div className="relative size-6">
+            <div className="flex min-w-0 flex-1 flex-row items-center gap-2">
+              <div className="relative size-6 shrink-0">
                 <Image src="/icons/ts-logo.svg" alt="" fill className="object-contain" />
               </div>
-              <span className="font-pretendard text-base leading-[1.5] font-normal tracking-[-0.02em] text-[rgba(22,22,22,0.72)] dark:text-[rgba(245,245,245,0.72)]">
+              <span className="font-pretendard truncate text-base leading-[1.5] font-normal tracking-[-0.02em] text-[rgba(22,22,22,0.72)] dark:text-[rgba(245,245,245,0.72)]">
                 {taskTitle}
               </span>
             </div>
@@ -161,11 +161,11 @@ export function FeedbackLayout({ taskTitle, repoUrl, branch = 'main', suggestion
               alt=""
               width={16}
               height={16}
-              className="opacity-[0.72] invert dark:invert-0"
+              className="shrink-0 opacity-[0.72] invert dark:invert-0"
             />
-            <div className="flex flex-row items-center gap-2">
+            <div className="flex shrink-0 flex-row items-center gap-2">
               <Image src="/icons/wand-shine.svg" alt="" width={24} height={24} className="invert dark:invert-0" />
-              <span className="font-pretendard text-base leading-[1.5] font-medium tracking-[-0.02em] text-[#161616] dark:text-[#F5F5F5]">
+              <span className="font-pretendard text-base leading-[1.5] font-medium tracking-[-0.02em] whitespace-nowrap text-[#161616] dark:text-[#F5F5F5]">
                 채점 후 피드백
               </span>
             </div>
