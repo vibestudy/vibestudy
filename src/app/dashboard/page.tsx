@@ -141,6 +141,21 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const [curricula, activityData] = await Promise.all([getCurricula(), getActivityData(154)])
 
   const targetCurriculumId = curriculumId || (curricula.length > 0 ? curricula[0].id : null)
+
+  if (targetCurriculumId?.includes('mock')) {
+    return (
+      <div className="flex h-64 flex-col items-center justify-center gap-4">
+        <div className="text-[rgba(245,245,245,0.72)]">빌더 여정을 찾을 수 없습니다</div>
+        <Link
+          href="/onboarding"
+          className="rounded-full bg-[#F5F5F5] px-5 py-2.5 text-[14px] font-medium text-[#161616]"
+        >
+          새 빌더 여정 시작하기
+        </Link>
+      </div>
+    )
+  }
+
   const curriculum = targetCurriculumId ? await fetchCurriculumFromAPI(targetCurriculumId) : null
 
   if (!curriculum) {
