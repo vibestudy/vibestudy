@@ -197,7 +197,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
               href="/detail/feedback"
               className="flex items-center justify-center gap-[6px] rounded-full bg-[#161616] px-[12px] py-[12px] text-[#F5F5F5] dark:bg-[#F5F5F5] dark:text-[#161616]"
             >
-              <Image src="/icons/wand-shine.svg" alt="" width={18} height={18} className="invert dark:invert-0" />
+              <Image src="/icons/wand-shine.svg" alt="" width={18} height={18} className="dark:invert invert-0" />
               <span className="text-[14px] leading-[1.45] font-medium tracking-[-0.02em]">채점 후 피드백</span>
             </Link>
           </div>
