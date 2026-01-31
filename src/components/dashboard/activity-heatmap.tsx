@@ -12,30 +12,20 @@ interface ActivityHeatmapProps {
   className?: string
 }
 
-function getActivityLevel(count: number): number {
-  if (count === 0) return 0
-  if (count <= 1) return 1
-  if (count <= 2) return 2
-  if (count <= 3) return 3
-  if (count <= 5) return 4
-  return 5
-}
-
-function getActivityOpacity(level: number): string {
-  const opacities = [
-    'opacity-[0.04]',
-    'opacity-[0.24]',
-    'opacity-[0.36]',
-    'opacity-[0.48]',
-    'opacity-[0.64]',
-    'opacity-100',
-  ]
-  return opacities[level] || opacities[0]
+function getActivityOpacity(count: number): number {
+  if (count === 0) return 0.04
+  if (count <= 1) return 0.24
+  if (count <= 2) return 0.36
+  if (count <= 3) return 0.48
+  if (count <= 4) return 0.56
+  if (count <= 5) return 0.64
+  if (count <= 6) return 0.72
+  return 1
 }
 
 export function ActivityHeatmap({ data = [], className }: ActivityHeatmapProps) {
   const rows = 7
-  const cols = 11
+  const cols = 22
   const totalCells = rows * cols
 
   const activityMap = new Map(data.map((d) => [d.date, d.count]))
@@ -46,7 +36,7 @@ export function ActivityHeatmap({ data = [], className }: ActivityHeatmapProps) 
     date.setDate(date.getDate() - (totalCells - 1 - index))
     const dateStr = date.toISOString().split('T')[0]
     const count = activityMap.get(dateStr) || 0
-    return { date: dateStr, count, level: getActivityLevel(count) }
+    return { date: dateStr, count, opacity: getActivityOpacity(count) }
   })
 
   const columns: (typeof cells)[] = []
@@ -62,14 +52,15 @@ export function ActivityHeatmap({ data = [], className }: ActivityHeatmapProps) 
   }
 
   return (
-    <div className={clsx('w-full', className)}>
-      <div className="flex gap-1">
+    <div className={clsx('w-full mt-auto', className)}>
+      <div className="flex gap-[4px]">
         {columns.map((column, colIndex) => (
-          <div key={colIndex} className="flex flex-col gap-1">
+          <div key={colIndex} className="flex flex-col gap-[4px]">
             {column.map((cell) => (
               <div
                 key={cell.date}
-                className={clsx('size-2.5 rounded bg-zinc-950 dark:bg-white', getActivityOpacity(cell.level))}
+                className="size-[14px] rounded-[4px]"
+                style={{ backgroundColor: `rgba(245, 245, 245, ${cell.opacity})` }}
                 title={`${cell.date}: ${cell.count}`}
               />
             ))}

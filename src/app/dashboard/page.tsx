@@ -90,11 +90,18 @@ function WandIcon() {
   )
 }
 
-export default async function DashboardPage() {
-  const [curricula, activityData] = await Promise.all([getCurricula(), getActivityData(154)])
-  const firstCurriculum = curricula.length > 0 ? await getCurriculumById(curricula[0].id) : null
+interface PageProps {
+  searchParams: Promise<{ curriculum?: string }>
+}
 
-  if (!firstCurriculum) {
+export default async function DashboardPage({ searchParams }: PageProps) {
+  const { curriculum: curriculumId } = await searchParams
+  const [curricula, activityData] = await Promise.all([getCurricula(), getActivityData(154)])
+
+  const targetCurriculumId = curriculumId || (curricula.length > 0 ? curricula[0].id : null)
+  const curriculum = targetCurriculumId ? await getCurriculumById(targetCurriculumId) : null
+
+  if (!curriculum) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-4">
         <div className="text-[rgba(245,245,245,0.72)]">아직 빌더 여정이 없습니다</div>
@@ -108,9 +115,10 @@ export default async function DashboardPage() {
     )
   }
 
-  const tasks = await getCurriculumTasks(firstCurriculum.id)
-  const epics = transformToEpics(firstCurriculum.structure)
-  const progress = firstCurriculum.progress
+  const tasks = await getCurriculumTasks(curriculum.id)
+  const epics = transformToEpics(curriculum.structure)
+  const initialStories = transformToStoriesWithTasks(curriculum.structure, 0, tasks)
+  const progress = curriculum.progress
   const aiFeedback =
     'Python과 웹 개발 기초를 적절히 익혀, 원활히 FastAPI 환경을 설정했습니다. 하지만, 일부 함수에 대한 이해도가 미흡해 복습이 필요합니다.'
 
@@ -121,7 +129,7 @@ export default async function DashboardPage() {
           <SourceCodeIcon />
         </div>
         <span className="text-[16px] leading-[1.5] font-medium tracking-[-0.02em] text-[#F5F5F5]">
-          {firstCurriculum.title}
+          {curriculum.title}
         </span>
       </div>
 
@@ -149,9 +157,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col gap-[4px] rounded-[14px] border border-[rgba(164,164,164,0.2)] p-[4px]">
             <div className="flex items-center gap-[4px]">
               <AIRatingBadge level="middle" range="32% ~ 64%" />
-              <div className="flex flex-1 flex-col gap-[16px] rounded-[10px] bg-[rgba(245,245,245,0.04)] p-[16px]"
-                style={{ height: '-webkit-fill-available' }}
-              >
+              <div className="flex flex-1 flex-col gap-[16px] self-stretch rounded-[10px] bg-[rgba(245,245,245,0.04)] p-[16px]">
                 <ProgressBar progress={progress} />
                 <ActivityHeatmap data={activityData} />
               </div>
@@ -169,8 +175,9 @@ export default async function DashboardPage() {
         {epics.length > 0 && (
           <DashboardClient
             epics={epics}
-            structure={firstCurriculum.structure}
-            oneLiner={firstCurriculum.one_liner}
+            structure={curriculum.structure}
+            oneLiner={curriculum.one_liner}
+            initialStories={initialStories}
             allTasks={tasks.map(serializeTaskForClient)}
           />
         )}

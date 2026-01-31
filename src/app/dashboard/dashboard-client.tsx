@@ -97,22 +97,23 @@ function transformToStoriesWithTasks(
 export function DashboardClient({ epics, structure, oneLiner, initialStories, allTasks }: DashboardClientProps) {
   const [selectedEpicId, setSelectedEpicId] = useState('1')
   const selectedEpicIndex = parseInt(selectedEpicId, 10) - 1
-  const stories = transformToStoriesWithTasks(structure, selectedEpicIndex, allTasks)
+  const stories =
+    selectedEpicIndex === 0 ? initialStories : transformToStoriesWithTasks(structure, selectedEpicIndex, allTasks)
 
   return (
-    <div className="mt-8">
+    <div className="flex flex-col gap-[12px]">
       <EpicNavigation epics={epics} selectedEpicId={selectedEpicId} onSelectEpic={setSelectedEpicId} />
 
       {stories.length > 0 && (
-        <div className="mt-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <h2 className="text-lg font-semibold text-zinc-950 dark:text-white">Story 구성</h2>
-            <p className="text-sm text-zinc-500">{oneLiner}</p>
+        <div className="flex flex-col gap-[12px]">
+          <div className="flex items-center justify-between gap-[2px] p-[4px]">
+            <span className="text-[18px] leading-[1.45] font-medium tracking-[-0.02em] text-[#F5F5F5]">Story 구성</span>
+            <span className="text-[16px] leading-[1.5] font-normal tracking-[-0.02em] text-[rgba(245,245,245,0.72)]">
+              {oneLiner}
+            </span>
           </div>
 
-          <div className="mt-4">
-            <StoryList stories={stories} />
-          </div>
+          <StoryList stories={stories} />
         </div>
       )}
     </div>
