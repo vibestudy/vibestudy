@@ -150,7 +150,7 @@ export function FeedbackLayout({ taskTitle, repoUrl, branch = 'main', suggestion
           <div className="sticky top-0 z-10 flex flex-row items-center gap-2.5 self-stretch bg-[rgba(255,255,255,0.72)] p-5 backdrop-blur-sm dark:bg-[rgba(30,30,30,0.95)]">
             <div className="flex min-w-0 flex-1 flex-row items-center gap-2">
               <div className="relative size-6 shrink-0">
-                <Image src="/icons/ts-logo.svg" alt="" fill className="object-contain" />
+                <Image src="/icons/ts-logo.svg" alt="" fill className="object-contain invert dark:invert-0" />
               </div>
               <span className="font-pretendard truncate text-base leading-[1.5] font-normal tracking-[-0.02em] text-[rgba(22,22,22,0.72)] dark:text-[rgba(245,245,245,0.72)]">
                 {taskTitle}
@@ -210,14 +210,7 @@ export function FeedbackLayout({ taskTitle, repoUrl, branch = 'main', suggestion
             onClick={onClose}
             className="flex flex-1 flex-row items-center justify-center gap-1.5 rounded-full bg-[#161616] px-[12px] py-3 dark:bg-[#F5F5F5]"
           >
-            <Image
-              src="/icons/close.svg"
-              alt=""
-              width={20}
-              height={20}
-              className="invert dark:invert-0"
-              style={{ height: 12, width: 12, maxWidth: 12, maxHeight: 12 }}
-            />
+            <Image src="/icons/close.svg" alt="" width={12} height={12} className="size-3 invert dark:invert-0" />
             <span className="font-pretendard text-sm leading-[1.45] font-medium tracking-[-0.02em] whitespace-nowrap text-[#F5F5F5] dark:text-[#161616]">
               피드백 종료
             </span>

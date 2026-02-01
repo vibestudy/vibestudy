@@ -1,5 +1,6 @@
 'use client'
 
+import { useTheme } from 'next-themes'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 interface CodeViewerV2Props {
@@ -166,35 +167,12 @@ function HighlightedLine({ line, isDark }: { line: string; isDark: boolean }) {
   )
 }
 
-function useIsDarkMode() {
-  const [isDark, setIsDark] = useState(false)
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    setIsDark(mediaQuery.matches || document.documentElement.classList.contains('dark'))
-
-    const observer = new MutationObserver(() => {
-      setIsDark(document.documentElement.classList.contains('dark'))
-    })
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
-
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches)
-    mediaQuery.addEventListener('change', handler)
-
-    return () => {
-      observer.disconnect()
-      mediaQuery.removeEventListener('change', handler)
-    }
-  }, [])
-
-  return isDark
-}
-
 export function CodeViewerV2({ repoUrl, file, highlightLine, branch = 'main', tooltip }: CodeViewerV2Props) {
   const [content, setContent] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const isDark = useIsDarkMode()
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === 'dark'
   const highlightedLineRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 

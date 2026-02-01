@@ -12,6 +12,7 @@ import {
 import { Navbar, NavbarItem, NavbarSection, NavbarSpacer } from '@/components/navbar'
 import { Sidebar, SidebarBody, SidebarFooter, SidebarHeader } from '@/components/sidebar'
 import { SidebarLayout } from '@/components/sidebar-layout'
+import { ThemeToggleDropdownItem } from '@/components/theme-toggle'
 import type { CurriculumListItem } from '@/lib/types'
 import { useClerk, useUser } from '@clerk/nextjs'
 import {
@@ -56,6 +57,7 @@ function AccountDropdownMenu({ anchor, onSignOut }: { anchor: 'top start' | 'bot
         <DropdownLabel>My account</DropdownLabel>
       </DropdownItem>
       <DropdownDivider />
+      <ThemeToggleDropdownItem />
       <DropdownItem href="#">
         <ShieldCheckIcon />
         <DropdownLabel>Privacy policy</DropdownLabel>
@@ -139,7 +141,7 @@ export function ApplicationLayout({ curricula, selectedCurriculumId, children }:
                 />
                 {searchQuery && (
                   <button type="button" onClick={() => setSearchQuery('')} className="focus:outline-none">
-                    <XMarkIcon className="size-4 cursor-pointer text-zinc-400 hover:text-zinc-300" />
+                    <XMarkIcon className="size-4 cursor-pointer text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300" />
                   </button>
                 )}
               </div>
@@ -177,12 +179,18 @@ export function ApplicationLayout({ curricula, selectedCurriculumId, children }:
                         className={clsx(
                           'flex w-full items-center gap-2 rounded-full px-3 py-3 text-sm transition-colors',
                           isSelected
-                            ? 'bg-white/[0.04] font-medium text-zinc-100 shadow-[0_0_24px_0_rgba(22,22,22,0.06)]'
-                            : 'text-zinc-100/70 hover:bg-white/[0.02]'
+                            ? 'bg-zinc-200/60 font-medium text-zinc-900 shadow-sm dark:bg-white/[0.04] dark:text-zinc-100 dark:shadow-[0_0_24px_0_rgba(22,22,22,0.06)]'
+                            : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-100/70 dark:hover:bg-white/[0.02]'
                         )}
                       >
                         {iconPath ? (
-                          <Image src={iconPath} alt="" width={20} height={20} className="shrink-0 opacity-70" />
+                          <Image
+                            src={iconPath}
+                            alt=""
+                            width={20}
+                            height={20}
+                            className="shrink-0 opacity-70 invert dark:invert-0"
+                          />
                         ) : (
                           <HugeiconsIcon icon={BookOpen01Icon} size={20} className="shrink-0 opacity-70" />
                         )}
@@ -212,8 +220,9 @@ export function ApplicationLayout({ curricula, selectedCurriculumId, children }:
                 <div className="truncate text-xs text-zinc-500 dark:text-zinc-500">{userEmail}</div>
               </div>
               <button
+                type="button"
                 onClick={handleSignOut}
-                className="rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-300"
+                className="rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
               >
                 <ArrowRightStartOnRectangleIcon className="size-5" />
               </button>

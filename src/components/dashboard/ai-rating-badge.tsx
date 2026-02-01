@@ -9,23 +9,23 @@ interface AIRatingBadgeProps {
   className?: string
 }
 
-export const levelConfig: Record<RatingLevel, { label: string; color: string; bgColor: string; icon: string }> = {
+export const levelConfig: Record<RatingLevel, { label: string; color: string; textClass: string; icon: string }> = {
   beginner: {
     label: '비기너',
     color: '#3f8c4a',
-    bgColor: 'rgba(29, 96, 38, 0.1)',
+    textClass: 'text-[#3f8c4a]',
     icon: '/icons/levels/level-1',
   },
   middle: {
     label: '미들',
     color: '#028AC7',
-    bgColor: 'rgba(2, 138, 199, 0.1)',
+    textClass: 'text-[#028AC7]',
     icon: '/icons/levels/level-2',
   },
   advanced: {
     label: '어드밴스드',
     color: '#A855F7',
-    bgColor: 'rgba(168, 85, 247, 0.1)',
+    textClass: 'text-[#A855F7]',
     icon: '/icons/levels/level-3',
   },
 }
@@ -36,10 +36,9 @@ export function AIRatingBadge({ level, range, className }: AIRatingBadgeProps) {
   return (
     <div
       className={clsx(
-        'flex shrink-0 flex-col items-center justify-center gap-[16px] self-stretch rounded-[10px] bg-[rgba(164,164,164,0.1)] p-[32px] dark:bg-[rgba(245,245,245,0.04)]',
+        'flex w-auto shrink-0 flex-col items-center justify-center gap-4 self-stretch rounded-[10px] bg-[rgba(164,164,164,0.1)] p-8 dark:bg-[rgba(245,245,245,0.04)]',
         className
       )}
-      style={{ width: 'auto' }}
     >
       <>
         <Image src={`${config.icon}-light.svg`} alt={config.label} width={64} height={64} className="dark:hidden" />
@@ -51,18 +50,12 @@ export function AIRatingBadge({ level, range, className }: AIRatingBadgeProps) {
           className="hidden dark:block"
         />
       </>
-      <div className="flex flex-col items-center gap-[2px] self-stretch">
-        <span
-          className="text-center text-[20px] leading-[1.4] font-semibold tracking-[-0.02em]"
-          style={{ color: config.color }}
-        >
+      <div className="flex flex-col items-center gap-0.5 self-stretch">
+        <span className={clsx('text-center text-xl leading-[1.4] font-semibold tracking-[-0.02em]', config.textClass)}>
           {config.label}
         </span>
         {range && (
-          <span
-            className="text-center text-[12px] leading-[1.35] font-normal tracking-[-0.02em]"
-            style={{ color: config.color }}
-          >
+          <span className={clsx('text-center text-xs leading-[1.35] font-normal tracking-[-0.02em]', config.textClass)}>
             {range}
           </span>
         )}
